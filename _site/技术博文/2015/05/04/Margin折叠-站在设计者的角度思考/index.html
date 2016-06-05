@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Margin折叠，站在设计者的角度思考 &middot; fri3nds
+    
+  </title>
+
+  <!-- CSS -->
+  <!-- <link rel="stylesheet" href="/public/css/syntax.css"> -->
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/pygments.css">
+  <link rel="stylesheet" href="/public/css/font-awesome.min.css">
+  <!-- <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400"> -->
+
+  <!-- Icons -->
+  <!-- <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/img/apple-touch-icon-144-precomposed.png"> -->
+  <link rel="shortcut icon" href="/public/img/chenglong.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- livereload test -->
+  <!--<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>-->
+
+  <!-- audioplayer -->
+  <script src="/public/js/jquery-1.11.1.js"></script>
+  <script src="/public/js/audioplayer/amazingaudioplayer.js"></script>
+  <link rel="stylesheet" type="text/css" href="/public/css/audioplayer/initaudioplayer-1.css">
+  <script src="/public/js/audioplayer/initaudioplayer-1.js"></script>
+
+</head>
+
+
+  <body class="">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-logo">
+      <a href="/"><img src="/public/img/chenglong.jpg"></a>
+    </div>
+    <p>Here is my personal weblog about technology and life.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/"><i class="fa fa-home fa-fw"></i>&nbsp 主页·&nbspHome</a>
+    <a class="sidebar-nav-item" href="/archive/"><i class="fa fa-file-text-o fa-fw"></i>&nbsp 归档·&nbspArchive</a>
+    <a class="sidebar-nav-item" href="/category/"><i class="fa fa-book fa-fw"></i>&nbsp 分类·&nbspCategory</a>
+    <a class="sidebar-nav-item" href="/tag/"><i class="fa fa-tags fa-fw"></i>&nbsp 标签·&nbspTag</a>
+    <a class="sidebar-nav-item" href="/about/"><i class="fa fa-hand-o-right fa-fw"></i>&nbsp 关于·&nbspAbout</a>
+    <!-- <span class="sidebar-nav-item"><i class="fa fa-info-circle">&nbsp&nbsp  </i>Currently v1.0.0</span> -->
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <div class="masthead-title">
+            <a href="/" title="Home">fri3nds</a>
+            <small>A craftsman typing carefully</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="container content">
+        <h2 class="post-name">Blog</h2>
+<div class="post">
+  <div class="post-heading inside">
+    <img src="/public/img/chenglong.jpg">
+    <h1 class="post-title">
+      <a class="post-title-blog" href="">
+        Margin折叠，站在设计者的角度思考
+      </a>
+    </h1>
+      <p class="post-info">
+        
+          转载  <a href="http://melonh.com/css/2015/04/28/understand-margin-collapse.html">Melon</a>
+        
+      </p>
+      <span class="post-info"><i class="fa fa-calendar"></i>&nbsp2015/05/04  </span>
+      <span class="post-info"><i class="fa fa-book"></i>&nbsp<a href="/category/index.html#技术博文">技术博文</a></span>
+      <span class="post-info"><i class="fa fa-tags"></i>&nbsp<a href="/tag/index.html#Css Margin">Css Margin</a></span>
+      <span class="post-info">&nbsp<a href="/tag/index.html#"></a></span>
+      <span class="post-info">&nbsp<a href="/tag/index.html#"></a></span>
+  </div>
+  <div class="post-content">
+    <p>大部分前端开发者在实现布局时，都会遇到Margin折叠的问题。CSS2.1标准文档中对Margin折叠的规则进行了标准的描述，但却没有解释这样设计的原因。使得我们想要摸清楚Margin折叠规则变得异常困难，通常需要死记硬背。 博主本人非常懒，这两天终于下定决心动动瓜脑子研究透彻Margin折叠。本篇文章我试图站在设计者的角度思考Margin折叠的设计思想，帮助自己和大家一起理解Margin折叠，抛开那些死记硬背。</p>
+
+<h3>标准文档对Margin的规定</h3>
+
+<h5>首先，我们看看标准文档对Margin的定义：</h5>
+
+<blockquote><p>原文：The width of the margin on non-floating block-level elements specifies the minimum distance to the edges of surrounding boxes. Two or more adjoining vertical margins (i.e., with no border, padding or content between them) are collapsed to use the maximum of the margin values. In most cases, after collapsing the vertical margins the result is visually more pleasing and closer to what the designer expects.</p>
+
+<p>翻译：外边距用来指定非浮动元素与其周围盒子边缘的最小距离。两个或两个以上的相邻的垂直外边距会被折叠并使用它们之间最大的那个外边距值。多数情况下，折叠垂直外边距可以在视觉上显得更美观，也更贴近设计师的预期。</p></blockquote>
+
+<p>注意： 如文档所说，margin是非浮动元素与周围盒子边缘的“最小”边距哦。它定义的只是外边距的最小值。</p>
+
+<h5>为什么要有Margin折叠？</h5>
+
+<p>只有垂直Margin会发生折叠，而水平Margin则不会。这是为了排版的需要，因为在多数情况下，折叠垂直外边距可以在视觉上显得更美观，也更贴近设计师的预期。</p>
+
+<h5>Margin折叠规则</h5>
+
+<p>这里列出标准文档中的Margin折叠规则。快速浏览即可:</p>
+
+<blockquote><p>Two margins are adjoining if and only if:</p>
+
+<ol>
+<li><p>both belong to in-flow block-level boxes that participate in the same block formatting context</p></li>
+<li><p>no line boxes, no clearance, no padding and no border separate them (Note that certain zero-height line boxes (see 9.4.2) are ignored for this purpose.)</p></li>
+<li><p>both belong to vertically-adjacent box edges, i.e. form one of the following pairs: * top margin of a box and top margin of its first in-flow child * bottom margin of box and top margin of its next in-flow following sibling * bottom margin of a last in-flow child and bottom margin of its parent if the parent has 'auto' computed height * top and bottom margins of a box that does not establish a new block formatting context and that has zero computed 'min-height', zero or 'auto' computed 'height', and no in-flow children</p></li>
+</ol>
+
+
+<p>Note the above rules imply that:</p>
+
+<ol>
+<li><p>Margins between a floated box and any other box do not collapse (not even between a float and its in-flow children).</p></li>
+<li><p>Margins of elements that establish new block formatting contexts (such as floats and elements with 'overflow' other than 'visible') do not collapse with their in-flow children.</p></li>
+<li><p>Margins of absolutely positioned boxes do not collapse (not even with their in-flow children).</p></li>
+<li><p>Margins of inline-block boxes do not collapse (not even with their in-flow children).</p></li>
+<li><p>The bottom margin of an in-flow block-level element always collapses with the top margin of its next in-flow block-level sibling, unless that sibling has clearance.</p></li>
+<li><p>The top margin of an in-flow block element collapses with its first in-flow block-level child's top margin if the element has no top border, no top padding, and the child has no clearance.</p></li>
+<li><p>The bottom margin of an in-flow block box with a 'height' of 'auto' and a 'min-height' of zero collapses with its last in-flow block-level child's bottom margin if the box has no bottom padding and no bottom border and the child's bottom margin does not collapse with a top margin that has clearance.</p></li>
+<li><p>A box's own margins collapse if the 'min-height' property is zero, and it has neither top or bottom borders nor top or bottom padding, and it has a 'height' of either 0 or 'auto', and it does not contain a line box, and all of its in-flow children's margins (if any) collapse.</p></li>
+</ol>
+</blockquote>
+
+<p>翻译：
+两个Margin当且只有符合以下规则时，才会发生折叠:</p>
+
+<ol>
+<li>都属于文档流中的块级盒子，并且属于同一个BFC。</li>
+<li>无line box, clearance, padding, border分离它们</li>
+<li>都属于垂直相邻的盒子边界</li>
+</ol>
+
+
+<p>以上的规则暗示了：</p>
+
+<ol>
+<li>浮动盒子不会跟其它盒子发生margin折叠（即使是于它的子元素）。</li>
+<li>创建BFC的盒子（如浮动根元素和overflow不为visible的元素）的Margin不会跟它的子元素发生margin折叠。</li>
+<li>绝对定位的盒子不会发生margin折叠（即使与它的子元素）。</li>
+<li>display为inline-block的元素不会发生margin折叠（即使与它的子元素）。</li>
+<li>文档流中的会计元素的bottom margin总会和它的下一个文档流中的兄弟元素的top margin折叠，除非这个兄弟元素有clearance</li>
+<li>如果文档流中一个元素没有top border, top padding，且它的子元素没有clearance，那么它的top margin会与它的第一个文档流中的块级子元素的top margin折叠。</li>
+<li>如果文档流中的一个元素的高度为auto，min-height为0，且它没有bottom padding和bottom border，且它的子元素的bottom margin没有与拥有</li>
+<li>当一个盒子的min-height为0，没有top或bottom borders，没有top或bottom padding，height为0或auto，不包含line box，且它的所有文档流中的子孙元素的margin都折叠了，那么它自己的top margin和bottom margin会折叠。</li>
+</ol>
+
+
+<h3>Margin设计思想-我的理解</h3>
+
+<ol>
+<li><p>只有文档流中的块级元素会发生Margin折叠。文档流外的元素，我们将它们看作是希望有特殊定位的元素，不应该应用文档流中常规文档的排版规则。因此， float不为none，或者position为absolute的元素，不会与兄弟元素发生margin折叠。</p>
+
+<p>display为inline-block的元素参与渲染上下文是Inline block center。其垂直位置不仅依赖于Margin，还依赖于自己所属的line box。因此也不应发生margin折叠。</p></li>
+<li><p>创建BFC的元素，不会与子元素发生margin折叠</p>
+
+<blockquote><p>BFC(Block formatting context)直译为"块级格式化上下文"。它是一个独立的渲染区域，只有Block-level box参与， 它规定了内部的Block-level Box如何布局，并且与这个区域外部毫不相干。</p></blockquote></li>
+</ol>
+
+
+<p>如标准文档所说，BFC是一个独立的渲染区域，它内部的元素与这个区域外毫不相干，不会相互影响。因此，创建BFC元素ElementA，它的子元素的margin，不应该影响ElementA与其兄弟元素或父元素之间的间距。</p>
+
+<p>所以，符合以下条件触发BFC的元素，都不会与自己的子元素发生margin折叠：</p>
+
+<ul>
+<li><p>float属性不为none</p></li>
+<li><p>position为absolute或fixed</p></li>
+<li><p>display为inline-block, table-cell,</p></li>
+<li><p>table-caption, flex, inline-flex</p></li>
+<li><p>overflow不为visible</p></li>
+</ul>
+
+
+<p>当元素之间产生间隙时，可能不会发生margin折叠 元素之间可能由如下原因产生间隙：</p>
+
+<ul>
+<li><p>两个元素的margin之间存在border或padding阻挡时，两个元素的margin无法折叠。</p></li>
+<li><p>两个元素相邻，第二个元素由于设置了clear不为none，被浮动的元素挤下去，与第一个元素的margin可能折叠不完全，或者不折叠。</p></li>
+</ul>
+
+
+<h3>防止Margin折叠</h3>
+
+<p>如上所说：</p>
+
+<ol>
+<li><p>只有文档流中的块级元素会发生Margin折叠,因此可通过将元素从文档流中去除，或者display设为inline-block的方式，防止其与兄弟节点发生margin折叠。</p></li>
+<li><p>创建BFC的元素，不会与子元素发生margin折叠 因此可通过触发元素的BFC，来防止它与自己的子元素发生Margin折叠</p></li>
+<li><p>当元素之间产生间隙时，可能不会发生margin折叠 因此可通过padding,border来制造间隙，以防止margin折叠</p></li>
+</ol>
+
+
+<h3>总结</h3>
+
+<p>这篇文章是我试图站在设计者的角度，对Margin折叠设计思想的理解。避免死记硬背这些规则。大家如果有不同的理解，欢迎讨论。</p>
+
+  </div>
+</div>
+
+<!-- <div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/06/05/GET%E5%92%8CPOST%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB-%E5%8F%8A%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BD%91%E4%B8%8A%E7%9A%84%E5%A4%9A%E6%95%B0%E7%AD%94%E6%A1%88%E9%83%BD%E6%98%AF%E9%94%99%E7%9A%84/">
+            GET和POST有什么区别？及为什么网上的多数答案都是错的。
+            <small>05 Jun 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/04/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BB%8B%E7%BB%8D/">
+            关于操作系统的一些介绍
+            <small>22 Apr 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/04/22/%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84-Ubuntu-%E7%8E%AF%E5%A2%83/">
+            搭建自己的 Ubuntu 环境（一）
+            <small>22 Apr 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div> -->
+
+
+<div class="sub_pagination">
+
+  
+    <a class="sub_pagination-item newer" href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/06/05/GET%E5%92%8CPOST%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB-%E5%8F%8A%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BD%91%E4%B8%8A%E7%9A%84%E5%A4%9A%E6%95%B0%E7%AD%94%E6%A1%88%E9%83%BD%E6%98%AF%E9%94%99%E7%9A%84/">上一篇&nbsp<i class="fa fa-chain"></i></a>
+  
+  
+    <a class="sub_pagination-item newer" href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/04/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BB%8B%E7%BB%8D/">关于操作系统的一些介绍&nbsp<i class="fa fa-share"></i></a>
+  
+</div>
+
+
+<!-- <div class="comments"> -->
+<h2>Comments</h2>
+
+
+
+<!-- Duoshuo Comment BEGIN -->
+<div id="comment">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-title="Margin折叠，站在设计者的角度思考"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {
+        short_name: "chengzihan"
+    };
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        // ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.src = '../../../../../public/js/duoshuo.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+<!-- Duoshuo Comment END -->
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+    <div class="footer">
+  <p>  Copyright © 2016 - <a href="/">fri3nds</a> - Powered by
+    <a href="http://jekyllrb.com/">Jekyll</a>.
+    <a href="http://github.com/">Github</a>
+  </p>
+  <ul>
+    <!-- <li><a href="/"><i class="fa fa-twitter fa-2x"></i></a></li> -->
+    <li><a href="https://github.com/xiaoDC"><i class="fa fa-github fa-2x"></i></a></li>
+    <!-- <li><a href="https://www.linkedin.com/nhome/?trk="><i class="fa fa-linkedin fa-2x"></i></a></li> -->
+  </ul>
+</div>
+
+
+    <!-- "The ending isn’t any more important than the moments leading to it." -Dr. Eva Rosalene, To The Moon -->
+  </body>
+</html>
+

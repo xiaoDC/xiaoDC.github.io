@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>fri3nds</title>
+    <description>Here is my personal weblog about technology and life.</description>
+    <link>http://shelldone.com/</link>
+    <atom:link href="http://shelldone.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sun, 05 Jun 2016 14:30:32 +0800</pubDate>
+    <lastBuildDate>Sun, 05 Jun 2016 14:30:32 +0800</lastBuildDate>
+    <generator>Jekyll v3.1.6</generator>
+    
+      <item>
+        <title>GET和POST有什么区别？及为什么网上的多数答案都是错的。</title>
+        <description>&lt;p&gt;初看到这篇文章的时候，觉得标题又是一个噱头。因为技术圈很多时候也有点像娱乐圈，很多人都只是为了搏眼球。但是闲来无聊就看了一下。看了一点就觉得被打脸了。原文作者文章写的确实很不错。故此在这儿转发，以表敬意。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;如果有人问你，GET 和 POST，有什么区别？你会如何回答？&lt;/p&gt;
+
+&lt;h4&gt;我的回答&lt;/h4&gt;
+
+&lt;p&gt;前几天有人问我这个问题。我说 GET 是用于获取数据的，POST，一般用于将数据发给服务器之用。&lt;/p&gt;
+
+&lt;p&gt;这个答案好像并不是他想要的。于是他继续追问有没有别的区别？我说这就是个名字而已，如果服务器支持，他完全可以把 GET 改个名字叫 GET2。他反问道，那就是单纯的名字上的区别喽？我想了想，我觉得如果说再具体的区别，只能去看 RFC 文档了，还要取决于服务器（指 Apache，IIS）的具体实现。但我不得不承认，我的确没有仔细看过 HTTP 的 RFC 文档。于是我说，我对 HTTP 协议不太熟悉。这个问题也就结束了。&lt;/p&gt;
+
+&lt;h4&gt;最普遍的答案&lt;/h4&gt;
+
+&lt;p&gt;回来之后寻思了很久，他到底是想问我什么？我一直就觉得 GET 和 POST 没有什么除了语义之外的区别，自打我开始学习 Web 编程开始就是这么理解的。&lt;/p&gt;
+
+&lt;p&gt;可能很多人都已经猜到了，他要的答案是：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;GET使用 URL 或 Cookie 传参。而 POST 将数据放在 BODY 中。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;GET 的 URL 会有长度上的限制，则 POST 的数据则可以非常大。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;POST 比 GET 安全，因为数据在地址栏上不可见。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;但是很不幸，这些区别全是错误的，更不幸的是，这个答案还是 &lt;a href=&quot;https://www.google.com.hk/search?q=get%E5%92%8Cpost%E7%9A%84%E5%8C%BA%E5%88%AB&amp;amp;ie=utf-8&amp;amp;oe=utf-8&amp;amp;aq=t&amp;amp;rls=org.mozilla:zh-CN:official&amp;amp;client=firefox-a&amp;amp;channel=fflb&amp;amp;gws_rd=cr,ssl&quot;&gt;Google搜索的头版头条&lt;/a&gt;，然而我根本没想着这些是答案，因为在我看来他们都是错的。我来一一解释一下。&lt;/p&gt;
+
+&lt;h4&gt;GET 和 POST 与数据如何传递没有关系&lt;/h4&gt;
+
+&lt;p&gt;GET 和 POST 是由&lt;a href=&quot;https://www.w3.org/Protocols/rfc2616/rfc2616.html&quot;&gt;HTTP协议&lt;/a&gt;定义的。在 HTTP 协议中，Method 和 Data（URL， Body， Header）是正交的两个概念，也就是说，使用哪个 Method 与应用层的数据如何传输是没有相互关系的。&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;这个如果你自己有过实际的尝试，就会完全同意原作者的。
+博主在开发中就深有体会，我们没有用一些 ajax 的库，而是自己基于 &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API&quot;&gt;fetch api&lt;/a&gt; 和 &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise&quot;&gt;Promise&lt;/a&gt; 封装了自己的一个名为 WebAPIUtils 的网络请求库，其中默认根据参数 body 是否为空对象，来确定 GET 或者是 POST 请求，当然你也可以指定 Method。发现原来 GET 或者是 POST 和 body 是没有关系的。只是我们一般都是这么理解的，一直是很模凌两可。(好，我们继续原作者的文章)&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;HTTP 没有要求，如果 Method 是 POST 数据就要放在 BODY 中。也没有要求，如果Method 是 GET，数据（参数）就一定要放在 URL 中而不能放在 BODY 中。&lt;/p&gt;
+
+&lt;p&gt;那么，网上流传甚广的这个说法是从何而来的呢？我在 &lt;a href=&quot;https://www.w3.org/TR/REC-html40/interact/forms.html#h-17.13.1&quot;&gt;HTML标准中，找到了相似的描述&lt;/a&gt;。这和网上流传的说法一致。但是这只是 HTML 标准对 HTTP 协议的用法的约定。怎么能当成 GET 和 POST 的区别呢？&lt;/p&gt;
+
+&lt;p&gt;而且，现代的 Web Server 都是支持 GET 中包含 BODY 这样的请求。虽然这种请求不可能从浏览器发出，但是现在的 Web Server 又不是只给浏览器用，已经完全地超出了 HTML 服务器的范畴了。&lt;/p&gt;
+
+&lt;p&gt;知道这个有什么用？我不想解释了，有时候就得自己痛一次才记得住。&lt;/p&gt;
+
+&lt;h4&gt;HTTP 协议对 GET 和 POST 都没有对长度的限制&lt;/h4&gt;
+
+&lt;p&gt;HTTP 协议明确地指出了，HTTP 头和 Body 都没有长度的要求。而对于 URL 长度上的限制，有两方面的原因造成：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;浏览器。据说早期的浏览器会对 URL 长度做限制。据说 IE 对 URL 长度会限制在 2048 个字符内（流传很广，而且无数同事都表示认同）。但我自己试了一下，我构造了 90K 的 URL 通过 IE9 访问 live.com，是正常的。网上的东西，哪怕是 Wikipedia 上的，也不能信。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;服务器。URL 长了，对服务器处理也是一种负担。原本一个会话就没有多少数据，现在如果有人恶意地构造几个几 M 大小的 URL，并不停地访问你的服务器。服务器的最大并发数显然会下降。另一种攻击方式是，把告诉服务器 Content-Length 是一个很大的数，然后只给服务器发一点儿数据，嘿嘿，服务器你就傻等着去吧。哪怕你有超时设置，这种故意的次次访问超时也能让服务器吃不了兜着走。有鉴于此，多数服务器出于安全啦、稳定啦方面的考虑，会给 URL 长度加限制。但是这个限制是针对所有 HTTP 请求的，与 GET、POST 没有关系。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h4&gt;安全不安全和 GET、POST 没有关系&lt;/h4&gt;
+
+&lt;p&gt;我觉得这真是中国特色。我讲个小段子，大家应该可以体会出这个说法多么的可笑。&lt;/p&gt;
+
+&lt;p&gt;觉得 POST 数据比 GET 数据安全的人会说&lt;/p&gt;
+
+&lt;p&gt;“防君子不防小人；中国小白多，能防小白用户就行了。”&lt;/p&gt;
+
+&lt;p&gt;“哼，”我不以为然，“那你怎么不说，URL 参数都 Encode 过了，或是 Base64 一下，小白也看不懂啊。”&lt;/p&gt;
+
+&lt;p&gt;那人反驳道，“Encode 太简单了，聪明点儿的小白很容易就可以 Decode 并修改掉。”&lt;/p&gt;
+
+&lt;p&gt;我笑道，“五十步笑百步耳，再聪明点儿的小白还会截包并重发呢，Opera 就有这功能。”&lt;/p&gt;
+
+&lt;p&gt;那人阴险地祭出神器——最终解释权，说，“这个不算小白。”&lt;/p&gt;
+
+&lt;p&gt;我日啊。&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;网络安全其实就是这样的，不过你用 GET 和 POST 都是然并卵。调试工具一打开，你往那个地址发送了什么东西全都可以看的见。如果在被截包，简直就是没有穿衣服啊。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;最后一点儿感想&lt;/p&gt;
+
+&lt;p&gt;我之前一直做 Windows 桌面应用，对 Web 开发无甚了解，直到一年多前转做服务器端开发，才开始接触到 HTTP。（注意，我说的是 HTTP，不是 HTML 。服务器开放接口是基于 REST 理念设计的，使用的协议是H TTP，但是传输的内容不是 HTML。这不是 Web Server，而是一个 Web Service）&lt;/p&gt;
+
+&lt;p&gt;所以我对于 GET 和 POST 的理解，是纯粹地来源于 HTTP 协议。他们只有一点根本区别，简单点儿说，一个用于获取数据，一个用于修改数据。具体的请参考 RFC 文档。&lt;/p&gt;
+
+&lt;p&gt;如果一个人一开始就做 Web 开发，很可能把 HTML 对 HTTP 协议的使用方式，当成 HTTP 协议的唯一的合理使用方式。从而犯了以偏概全的错误。&lt;/p&gt;
+
+&lt;p&gt;可能有人会觉得我钻牛角尖。我只是不喜欢模棱两可，不喜欢边界不清、概念不明，不喜欢“拿来主义”，也不喜欢被其它喜欢钻牛角尖的人奚落得无地自容。&lt;/p&gt;
+
+&lt;p&gt;“知之为知之，不知为不知，是知也。”&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;h4&gt;感想&lt;/h4&gt;
+
+&lt;p&gt;首先，感谢原作者分享这篇博文。其次，很敬佩原作者这种精神。&lt;/p&gt;
+
+&lt;h4&gt;安全问题&lt;/h4&gt;
+
+&lt;p&gt;web 应用的安全问题不能靠 GET 和 POST 简单地解决的。后续文章会讲讲 web 应用的安全问题，敬请期待。&lt;/p&gt;
+</description>
+        <pubDate>Fri, 05 Jun 2015 00:00:00 +0800</pubDate>
+        <link>http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/06/05/GET%E5%92%8CPOST%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB-%E5%8F%8A%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BD%91%E4%B8%8A%E7%9A%84%E5%A4%9A%E6%95%B0%E7%AD%94%E6%A1%88%E9%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</link>
+        <guid isPermaLink="true">http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/06/05/GET%E5%92%8CPOST%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB-%E5%8F%8A%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BD%91%E4%B8%8A%E7%9A%84%E5%A4%9A%E6%95%B0%E7%AD%94%E6%A1%88%E9%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</guid>
+        
+        <category>Http</category>
+        
+        
+        <category>技术博文</category>
+        
+      </item>
+    
+      <item>
+        <title>Margin折叠，站在设计者的角度思考</title>
+        <description>&lt;p&gt;大部分前端开发者在实现布局时，都会遇到Margin折叠的问题。CSS2.1标准文档中对Margin折叠的规则进行了标准的描述，但却没有解释这样设计的原因。使得我们想要摸清楚Margin折叠规则变得异常困难，通常需要死记硬背。 博主本人非常懒，这两天终于下定决心动动瓜脑子研究透彻Margin折叠。本篇文章我试图站在设计者的角度思考Margin折叠的设计思想，帮助自己和大家一起理解Margin折叠，抛开那些死记硬背。&lt;/p&gt;
+
+&lt;h3&gt;标准文档对Margin的规定&lt;/h3&gt;
+
+&lt;h5&gt;首先，我们看看标准文档对Margin的定义：&lt;/h5&gt;
+
+&lt;blockquote&gt;&lt;p&gt;原文：The width of the margin on non-floating block-level elements specifies the minimum distance to the edges of surrounding boxes. Two or more adjoining vertical margins (i.e., with no border, padding or content between them) are collapsed to use the maximum of the margin values. In most cases, after collapsing the vertical margins the result is visually more pleasing and closer to what the designer expects.&lt;/p&gt;
+
+&lt;p&gt;翻译：外边距用来指定非浮动元素与其周围盒子边缘的最小距离。两个或两个以上的相邻的垂直外边距会被折叠并使用它们之间最大的那个外边距值。多数情况下，折叠垂直外边距可以在视觉上显得更美观，也更贴近设计师的预期。&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;注意： 如文档所说，margin是非浮动元素与周围盒子边缘的“最小”边距哦。它定义的只是外边距的最小值。&lt;/p&gt;
+
+&lt;h5&gt;为什么要有Margin折叠？&lt;/h5&gt;
+
+&lt;p&gt;只有垂直Margin会发生折叠，而水平Margin则不会。这是为了排版的需要，因为在多数情况下，折叠垂直外边距可以在视觉上显得更美观，也更贴近设计师的预期。&lt;/p&gt;
+
+&lt;h5&gt;Margin折叠规则&lt;/h5&gt;
+
+&lt;p&gt;这里列出标准文档中的Margin折叠规则。快速浏览即可:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Two margins are adjoining if and only if:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;both belong to in-flow block-level boxes that participate in the same block formatting context&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;no line boxes, no clearance, no padding and no border separate them (Note that certain zero-height line boxes (see 9.4.2) are ignored for this purpose.)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;both belong to vertically-adjacent box edges, i.e. form one of the following pairs: * top margin of a box and top margin of its first in-flow child * bottom margin of box and top margin of its next in-flow following sibling * bottom margin of a last in-flow child and bottom margin of its parent if the parent has &#39;auto&#39; computed height * top and bottom margins of a box that does not establish a new block formatting context and that has zero computed &#39;min-height&#39;, zero or &#39;auto&#39; computed &#39;height&#39;, and no in-flow children&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;Note the above rules imply that:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Margins between a floated box and any other box do not collapse (not even between a float and its in-flow children).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Margins of elements that establish new block formatting contexts (such as floats and elements with &#39;overflow&#39; other than &#39;visible&#39;) do not collapse with their in-flow children.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Margins of absolutely positioned boxes do not collapse (not even with their in-flow children).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Margins of inline-block boxes do not collapse (not even with their in-flow children).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The bottom margin of an in-flow block-level element always collapses with the top margin of its next in-flow block-level sibling, unless that sibling has clearance.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The top margin of an in-flow block element collapses with its first in-flow block-level child&#39;s top margin if the element has no top border, no top padding, and the child has no clearance.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The bottom margin of an in-flow block box with a &#39;height&#39; of &#39;auto&#39; and a &#39;min-height&#39; of zero collapses with its last in-flow block-level child&#39;s bottom margin if the box has no bottom padding and no bottom border and the child&#39;s bottom margin does not collapse with a top margin that has clearance.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A box&#39;s own margins collapse if the &#39;min-height&#39; property is zero, and it has neither top or bottom borders nor top or bottom padding, and it has a &#39;height&#39; of either 0 or &#39;auto&#39;, and it does not contain a line box, and all of its in-flow children&#39;s margins (if any) collapse.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;翻译：
+两个Margin当且只有符合以下规则时，才会发生折叠:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;都属于文档流中的块级盒子，并且属于同一个BFC。&lt;/li&gt;
+&lt;li&gt;无line box, clearance, padding, border分离它们&lt;/li&gt;
+&lt;li&gt;都属于垂直相邻的盒子边界&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;以上的规则暗示了：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;浮动盒子不会跟其它盒子发生margin折叠（即使是于它的子元素）。&lt;/li&gt;
+&lt;li&gt;创建BFC的盒子（如浮动根元素和overflow不为visible的元素）的Margin不会跟它的子元素发生margin折叠。&lt;/li&gt;
+&lt;li&gt;绝对定位的盒子不会发生margin折叠（即使与它的子元素）。&lt;/li&gt;
+&lt;li&gt;display为inline-block的元素不会发生margin折叠（即使与它的子元素）。&lt;/li&gt;
+&lt;li&gt;文档流中的会计元素的bottom margin总会和它的下一个文档流中的兄弟元素的top margin折叠，除非这个兄弟元素有clearance&lt;/li&gt;
+&lt;li&gt;如果文档流中一个元素没有top border, top padding，且它的子元素没有clearance，那么它的top margin会与它的第一个文档流中的块级子元素的top margin折叠。&lt;/li&gt;
+&lt;li&gt;如果文档流中的一个元素的高度为auto，min-height为0，且它没有bottom padding和bottom border，且它的子元素的bottom margin没有与拥有&lt;/li&gt;
+&lt;li&gt;当一个盒子的min-height为0，没有top或bottom borders，没有top或bottom padding，height为0或auto，不包含line box，且它的所有文档流中的子孙元素的margin都折叠了，那么它自己的top margin和bottom margin会折叠。&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Margin设计思想-我的理解&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;只有文档流中的块级元素会发生Margin折叠。文档流外的元素，我们将它们看作是希望有特殊定位的元素，不应该应用文档流中常规文档的排版规则。因此， float不为none，或者position为absolute的元素，不会与兄弟元素发生margin折叠。&lt;/p&gt;
+
+&lt;p&gt;display为inline-block的元素参与渲染上下文是Inline block center。其垂直位置不仅依赖于Margin，还依赖于自己所属的line box。因此也不应发生margin折叠。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;创建BFC的元素，不会与子元素发生margin折叠&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;BFC(Block formatting context)直译为&quot;块级格式化上下文&quot;。它是一个独立的渲染区域，只有Block-level box参与， 它规定了内部的Block-level Box如何布局，并且与这个区域外部毫不相干。&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;如标准文档所说，BFC是一个独立的渲染区域，它内部的元素与这个区域外毫不相干，不会相互影响。因此，创建BFC元素ElementA，它的子元素的margin，不应该影响ElementA与其兄弟元素或父元素之间的间距。&lt;/p&gt;
+
+&lt;p&gt;所以，符合以下条件触发BFC的元素，都不会与自己的子元素发生margin折叠：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;float属性不为none&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;position为absolute或fixed&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;display为inline-block, table-cell,&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;table-caption, flex, inline-flex&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;overflow不为visible&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;当元素之间产生间隙时，可能不会发生margin折叠 元素之间可能由如下原因产生间隙：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;两个元素的margin之间存在border或padding阻挡时，两个元素的margin无法折叠。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;两个元素相邻，第二个元素由于设置了clear不为none，被浮动的元素挤下去，与第一个元素的margin可能折叠不完全，或者不折叠。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;防止Margin折叠&lt;/h3&gt;
+
+&lt;p&gt;如上所说：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;只有文档流中的块级元素会发生Margin折叠,因此可通过将元素从文档流中去除，或者display设为inline-block的方式，防止其与兄弟节点发生margin折叠。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;创建BFC的元素，不会与子元素发生margin折叠 因此可通过触发元素的BFC，来防止它与自己的子元素发生Margin折叠&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;当元素之间产生间隙时，可能不会发生margin折叠 因此可通过padding,border来制造间隙，以防止margin折叠&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;总结&lt;/h3&gt;
+
+&lt;p&gt;这篇文章是我试图站在设计者的角度，对Margin折叠设计思想的理解。避免死记硬背这些规则。大家如果有不同的理解，欢迎讨论。&lt;/p&gt;
+</description>
+        <pubDate>Mon, 04 May 2015 00:00:00 +0800</pubDate>
+        <link>http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/05/04/Margin%E6%8A%98%E5%8F%A0-%E7%AB%99%E5%9C%A8%E8%AE%BE%E8%AE%A1%E8%80%85%E7%9A%84%E8%A7%92%E5%BA%A6%E6%80%9D%E8%80%83/</link>
+        <guid isPermaLink="true">http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/05/04/Margin%E6%8A%98%E5%8F%A0-%E7%AB%99%E5%9C%A8%E8%AE%BE%E8%AE%A1%E8%80%85%E7%9A%84%E8%A7%92%E5%BA%A6%E6%80%9D%E8%80%83/</guid>
+        
+        <category>Css Margin</category>
+        
+        
+        <category>技术博文</category>
+        
+      </item>
+    
+      <item>
+        <title>关于操作系统的一些介绍</title>
+        <description>&lt;h4&gt;主流操作系统&lt;/h4&gt;
+
+&lt;p&gt;最近在倒腾 Linux 系统，自己其实是一个 Linux 的菜鸟，很多 Linux 的一些命令都没有深入的研究、实用，但是因为一些原因必须去折腾 Linux 系统。说起操作系统，现在主流的操作系统，无外乎就是 Windows、 Linux、Unix。&lt;/p&gt;
+
+&lt;p&gt;对于 Linux，耳熟能详的 Ubuntu、CentOS、RedHat、Fedora 等等。那他们到底和 Linux 是什么关系呢？对于刚介绍 Linux 系统的人来说，可能有点迷茫的。那就拿 Windows 来做说明对比好了。天国的子民很多人都是用 Windows 系统，但是很多都是盗版的。很多人可能就说买电脑时自带的是正版的啊，其中具体是不是正版的，仔细研究一些资料就知道是不是正版的 or 很有可能就是一个正版的镜像，说白了就是一个复制品。很多 Windows 用户重装系统一般都是在网上下载一个镜像文件，然后刻录到 U盘或者是光盘中，然后进行安装。然后进入系统之后，查看系统的详细信息，可能是雨林木风或者是深度的。那么前面提到 Linux 中的 Ubuntu、CentOS等等就等同于 Windows 系统中的雨林木风、深度等等。区别就是 Ubuntu、CentOS 不是盗版的，而雨林木风、深度基本上都是盗版，原因就是 Linux 系统是开源的，不存在盗版只说。那么有人就会问 Windows 有 Windows XP、Windows Vista、Windows 7、Windows 8、Windows 10等，这些其实是 Windows 系统的版本。对应的雨林木风、深度的也有 XP、Win7等版本的。在 Linux 中也是一样的，Ubuntu 有 Ubuntu 10.04、Ubuntu 10.10等，目前应该到了 Ubuntu 12.04 了。CentOS 也有5、6、7等等。&lt;/p&gt;
+
+&lt;p&gt;想必大家应该搞清楚 Linux 系统的一些概念了，好了那么来说说 Unix。Unix 系统是一个很古老的操作系统，一般人很少接触到。但是说到 Mac OS，估计很多人都在使用。Mac OS系统是在 Unix 系统上开发出来的，简单就是说 Apple 给 Unix 系统做了图形界面，于是就有了自己的 Mac OS 系统了，可是实际上可能不是这么简单的。&lt;/p&gt;
+
+&lt;h4&gt;Unix 和 Linux&lt;/h4&gt;
+
+&lt;p&gt;Linux和UNIX的最大的区别是，前者是开发源代码的自由软件，而后者是对源代码实行知识产权保护的传统商业软件。这应该是他们最大的不同，这种不同体现在用户对前者有很高的自主权，而对后者却只能去被动的适应；这种不同还表现在前者的开发是处在一个完全开放的环境之中,而后者的开发完全是处在一个黑箱之中,只有相关的开发人员才能够接触的产品的原型。&lt;/p&gt;
+
+&lt;p&gt;Linux 的源头要追溯到最古老的UNIX。1969年，Bell实验室的Ken Thompson开始利用一台闲置的 PDP-7计算机开发了一种多用户，多任务操作系统。很快，Dennis Richie加入了这个项目，在他们共同努力下诞生了最早的UNIX。Richie受一个更早的项目——MULTICS的启发，将此操作系统命名为 Unix。早期UNIX是用汇编语言编写的，但其第三个版本用一种崭新的编程语言C重新设计了。C是Richie设计出来并用于编写操作系统的程序语言。通过这次重新编写，Unix得以移植到更为强大的 DEC PDP-11/45与11/70计算机上运行。后来发生的一切，正如他们所说，已经成为历史。Unix从实验室走出来并成为了操作系统的主流，现在几乎每个主要的计算机厂商都有其自有版本的Unix.&lt;/p&gt;
+
+&lt;p&gt;Linux起源于一个学生的简单需求。Linus Torvalds,Linux的作者与主要维护者，在其上大学时所买得起的唯一软件是Minix. Minix是一个类似Unix，被广泛用来辅助教学的简单操作系统。Linus 对Minix不是很满意，于是决定自己编写软件。他以学生时代熟悉的Unix作为原型， 在一台Intel 386 PC上开始了他的工作。他的进展很快，受工作成绩的鼓舞，他将这项成果通过互连网与其他同学共享，主要用于学术领域。有人看到了这个软件并开始分发。每当出现新问题时，有人会立刻找到解决办法并加入其中，很快的， Linux成为了一个操作系统。值得注意的是Linux并没有包括Unix源码。它是按照公开的POSIX标准重新编写的。Linux大量使用了由麻省剑桥免费软件基金的GNU软件，同时Linux自身也是用它们构造而成。&lt;/p&gt;
+
+&lt;h5&gt;另外两大区别：&lt;/h5&gt;
+
+&lt;p&gt;　　1） UNIX系统大多是与硬件配套的，而Linux则可运行在多种硬件平台上.&lt;/p&gt;
+
+&lt;p&gt;　　2） UNIX是商业软件，而Linux是自由软件，免费、公开源代码的.&lt;/p&gt;
+
+&lt;p&gt;　　UNIX(5万美圆)而Linux免费&lt;/p&gt;
+
+&lt;p&gt;　　[历史]&lt;/p&gt;
+
+&lt;p&gt;　　Unix的历史久于linux. Linux的思想源于Unix&lt;/p&gt;
+
+&lt;p&gt;　　[产品]&lt;/p&gt;
+
+&lt;p&gt;　　unix和linux都是操作系统的名称．但unix这四个字母除了是操作系统名称外，还作为商标归SCO所有．&lt;/p&gt;
+
+&lt;p&gt;　　Linux商业化的有RedHat Linux 、SuSe Linux、slakeware Linux、国内的红旗等，还有Turbo Linux.&lt;/p&gt;
+
+&lt;p&gt;　　Unix主要有Sun 的Solaris、IBM的AIX,　HP的HP-UX，以及x86平台的的SCO Unix/Unixware&lt;/p&gt;
+
+&lt;p&gt;　　[其他区别]&lt;/p&gt;
+
+&lt;p&gt;　　linux的核心是免费的，自由使用的，核心源代码是开放的．&lt;/p&gt;
+
+&lt;p&gt;　　而unix的核心并不公开&lt;/p&gt;
+
+&lt;p&gt;　　在对硬件的要求上，linux比unix要低，没有unix那么苛刻．在安装上linux比unix容易掌握．&lt;/p&gt;
+
+&lt;p&gt;　　在使用上，linux相对没有unix那么复杂．&lt;/p&gt;
+
+&lt;p&gt;Unix多数是硬件厂商针对自己的硬件平台的操作系统，主要与CPU等有关，如Sun 的Solaris作为商用，定位在其使用SPARC/SPARCII的CPU的工作站及服务器上，当然Solaris也有x86的版本，而Linux也有其于RISC的版本。&lt;/p&gt;
+
+&lt;p&gt;但确切的讲，拿RISC上的Unix与x86上的Linux进行比较不太合适。至于价格，个人使用的Linux基本上算是免费的，不同的Linux发行厂商针对企业级应用在基本的系统上有些优化，如RedHat的Enterprise产品，这些产品包括支持服务是比较贵的。像IBM/HP/SUN的Unix，因为主要是针对其硬件平台，所以操作系统通常在设备价格中。(没有人单独去买一个Unix操作系统的)&lt;/p&gt;
+
+&lt;p&gt;在性能上，linux没有unix那么全面，但基本上对个人用户和小型应用来说是绰绰有余．&lt;/p&gt;
+
+&lt;p&gt;通常情况下，如果你有机会使用到Unix环境，比如银行、电信部门，那一般都是固定机型的Unix。比如电信里SUN的居多，民航里HP的居多，银行里IBM的居多。学习中，不同的Unix命令集有些不同，要注意。&lt;/p&gt;
+
+&lt;p&gt;至于学习，我看还是linux比较好学一点，而且现在喜欢和鼓捣linux的人也越来越多，各种有关linux的资料也很多．如果是自己想学习，那Linux或是BSD系统是不错的选择。一台x86的机器就可以。应用上，除非是大型网站，一般企业或个人，使用Linux即可.&lt;/p&gt;
+
+&lt;p&gt;UNIX是一个功能强大、性能全面的多用户、多任务操作系统，可以应用从巨型计算机到普通PC机等多种不同的平台上，是应用面最广、影响力最大的操作系统。&lt;/p&gt;
+
+&lt;p&gt;Linux是一种外观和性能与UNIX相同或更好的操作系统，但，Linux不源于任何版本的UNIX的源代码，并不是UNIX，而是一个类似于UNIX的产品。Linux产品成功的模仿了UNIX系统和功能，具体讲Linux是一套兼容于System V以及BSD UNIX的操作系统，对于System V来说，目前把软件程序源代码拿到Linux底下重新编译之后就可以运行，而对于BSD UNIX来说它的可执行文件可以直接在Linux环境下运行。&lt;/p&gt;
+
+&lt;p&gt;一般来说，Linux是一套遵从POSIX（可移植操作系统环境）规范的一个操作系统，它能够在普通PC计算机上实现全部的UNIX特性，具有多任务、多用户的能力。Linux受到广大计算机爱好者的喜爱的另一个主要原因是，它具有UNIX的全部功能，任何使用UNIX操作系统或想要学习UNIX操作系统的人都可以从Linux中获益。&lt;/p&gt;
+
+&lt;p&gt;在网络管理能力和安全方面，使用过Linux的人都承认Linux与UNIX很相似。UNIX系统一直被用做高端应用或服务器系统，因此拥有一套完善的网络管理机制和规则，Linux沿用了这些出色的规则，使网络的可配置能力很强，为系统管理提供了极大的灵活性。&lt;/p&gt;
+
+&lt;h4&gt;Windows 系统&lt;/h4&gt;
+
+&lt;p&gt;Windows 系统之前应该是 Microsoft 的 Dos 系统，就是黑框框的字符界面，现在 Linux 的 Server 版就是这样的。后来因为乔布斯准备做图形界面而盖茨抄袭了这一想法，产生了 Windows 系统，至于究竟是谁抄谁，我所了解到的是乔帮主也是抄袭别人的想法的吧。不过至少这些确实推动了行业的进步。&lt;/p&gt;
+
+&lt;h4&gt;三大操作系统使用的对象&lt;/h4&gt;
+
+&lt;p&gt;很多 Windows 用户觉得 Linux 系统使用起来很难受，确实对于一些没有计算机专业至少的人来说，使用 Linux 简直就是噩梦。对于做维护的人来说，Linux 对他们来说简直是利器。很多一些问题。啪啪敲入一些字符就 OK 了。简直就是高大上啊！而 Mac OS 就是装逼，用 Mac OS就是为了装逼的&lt;/p&gt;
+
+&lt;p&gt;但是客观来说，Windows 有自己的图形界面，确实很方便，但是 Windows 的内存管理真的是不敢恭维，可能这是当年 Microsoft 和 Intel 的战略导致的吧。Intel 能生产多好的硬件，Microsoft 的 Windows 系统就吃多少硬件，用户不得不更换硬件，两大巨头确实赚了不少钱，但是现在看来当年他们完全是自己给自己挖坑。现在的 Linux 和 Mac OS 也都有了图形界面，而且他们可以运行在更低配置的硬件上。&lt;/p&gt;
+
+&lt;p&gt;如果你是一个开发人员的话，估计多多少少碰到 Windows 系统的一些问题吧。搭建开发环境的时候，简直是坑爹啊，装Python、Go、Ruby等等基于他们写的一些小工具简直是不能忍受的。&lt;/p&gt;
+
+&lt;p&gt;Linux 本身发行的时候就集成了这些东西，所以搭建相应的开发环境可能就是一行命令。而他的缺陷就是在于一些软件对 Linux 的支持不是很好，顶顶大名的 QQ 居然 Linux 版本好多年没有更新了。哈哈，只能说用 Linux 的人都不屑于用 QQ 来交流吧。所以说 Linux 有很好的开发环境但是没有很好的图形界面。&lt;/p&gt;
+
+&lt;p&gt;Mac OS 就不一样了，现在很多的软件基本上都有 Windows 版和 Mac 版，所以软件支持很好。而且 Mac 的软件图形界面都是很漂亮的。而且 Mac OS 发行的时候也是集成了很多的开发语言，所以对于开发来说 Mac OS应该是首选。&lt;/p&gt;
+
+&lt;h4&gt;个人的感悟&lt;/h4&gt;
+
+&lt;p&gt;刚接触计算机的时候都是用 Windows 的，后来接触了一些 Linux，但是确实没有很长时间的在上面做过一些开发的。后来就转到 Mac OS 开发。其实也有些人买了 Mac 电脑，然后装了一个 Windows 的操作系统，我真的只能说是暴殄天物，因为 Mac OS 真的是很容易上手的。只能就像你之前用 Android，然后买了一个 iPhone 手机，其实学习成本是很低的。但是你想用的很好，还是需要很多的学习。之前有一两个月的时候是在 Ubuntu 下开发的，感觉就是 Linux 系统很强大，但是需要很深的功力才能很好的驾驭它。
+还有一点感触就是使用 Windows 的时候，一些一个程序卡死了，基本上什么操作都不能做了，其他软件也不能使用了，只能杀死进程了。而对于 Mac OS 来说，当一个程序卡死了，其他软件还是正常的使用。&lt;/p&gt;
+
+&lt;h4&gt;如何选择&lt;/h4&gt;
+
+&lt;p&gt;至于如何选择，这个得看个人吧。很多虽然是计算机专业的，但是真的是喜欢一层不变的，解决问题的能力很差，不去折腾，这样的话，还是选择 Windows 吧。但是你的技能很可能一直不会有很大的提升的。有一些 Linux 命令的基础的话，在经济实力允许的情况下还是选择 Mac OS，因为 Linux 很容易折腾坏了。&lt;/p&gt;
+</description>
+        <pubDate>Wed, 22 Apr 2015 00:00:00 +0800</pubDate>
+        <link>http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/04/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BB%8B%E7%BB%8D/</link>
+        <guid isPermaLink="true">http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/04/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BB%8B%E7%BB%8D/</guid>
+        
+        <category>Operation System</category>
+        
+        
+        <category>技术博文</category>
+        
+      </item>
+    
+      <item>
+        <title>搭建自己的 Ubuntu 环境（一）</title>
+        <description>&lt;h4&gt;写在前面&lt;/h4&gt;
+
+&lt;p&gt;安装 Ubuntu 后，为了方便操作，选择使用 SSH 来远程操作 Ubuntu，这样不用两台机子来回操作，在一台机器上就可以操作另外一个机器，这样就方便了很多。
+ssh是一种安全协议，主要用于给远程登录会话数据进行加密，保证数据传输的安全，现在介绍一下如何在Ubuntu 14.04上安装和配置ssh&lt;/p&gt;
+
+&lt;h4&gt;工具／原料&lt;/h4&gt;
+
+&lt;p&gt;1.Ubuntu 14.04&lt;/p&gt;
+
+&lt;h4&gt;安装部署 SSH 服务器&lt;/h4&gt;
+
+&lt;p&gt;下面的操作都必须在你的 Ubuntu 机器上，因为没有 SSH 服务器端，你根本没有办法连接到 Ubuntu 机器上。&lt;/p&gt;
+
+&lt;h3&gt;更新源列表&lt;/h3&gt;
+
+&lt;p&gt;打开“终端窗口”或者使用快捷键“ctrl＋alt＋t”打开，在终端中输入“sudo apt-get update”--&gt;回车--&gt;,输入当前登陆用户的密码，回车即可。
+&lt;img src=&quot;/public/img/ubuntu-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h5&gt;安装SSH&lt;/h5&gt;
+
+&lt;p&gt;在终端中输入“sudo apt-get install openssh-server”--&gt;回车--&gt;按要求输入“Y”或者“n”--&gt;回车，完成安装&lt;/p&gt;
+
+&lt;h5&gt;查看SSH服务是否启动&lt;/h5&gt;
+
+&lt;p&gt;在终端输入“sudo ps -e | grep ssh”--&gt;回车--&gt;有 sshd，说明 ssh 服务已经启动，如果没有启动，输入“sudo service ssh start”--&gt;回车--&gt;ssh服务就会启动。
+&lt;img src=&quot;/public/img/ubuntu-2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4&gt;ssh 登陆&lt;/h4&gt;
+
+&lt;p&gt;以上的步骤基本上就完成安装了，一些具体的可能需要配置 ssh 服务器，在终端中输入“sudo vim /etc/ssh/sshd_config”--&gt;回车，使用 vim 修改其中的响应配置。&lt;/p&gt;
+
+&lt;p&gt;接下来就是其他机器通过 ssh 来登陆到改 Ubuntu 了。我们称刚才安装 ssh  服务器端的 Ubuntu 系统的机器为 A，那么我们其他的机器 B 想通过 ssh 来远程到机器 A的话，就必须在机器 B 上安装 ssh 的客户端， Ubuntu 14.04 默认安装了 ssh 客户端的，Mac OS也是默认安装了 ssh 客户端。&lt;/p&gt;
+
+&lt;p&gt;下面以Mac OS（机器 B）为例通过 ssh 远程到 Ubuntu（机器 A）&lt;/p&gt;
+
+&lt;p&gt;Mac OS 上打开终端或者是 iTerm， 输入“ssh chenglong@192.168.1.102”--&gt; 回车，
+其中 ssh 连接的格式是 ssh user@ip，以上的命令 “chenglong” 是 Ubuntu（机器 A）上的一个用户， “192.168.1.102” 是 Ubuntu （机器 A）的 IP 地址。
+回车后，要求我们输入密码，这个密码是机器 A 上user（即“chenglong”）对应的登陆密码。
+之后便会链接成功。
+&lt;img src=&quot;/public/img/ubuntu-3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4&gt;连接错误&lt;/h4&gt;
+
+&lt;p&gt;之上登陆后，因为我们是通过“用户名和 IP 地址”来建立的 ssh 连接，所以在Mac OS（机器 B）上写入了一个 RSA 值，所以如果 Ubuntu （机器 A）重装系统，在根据“用户名和 IP 地址”来 ssh 登录的时候，如果‘机器 A’的 IP 地址不变的话，会出现错误。原因是重装系统后‘机器 A’ 会重新生成一个 RSA，那么‘机器 B’上记录的还是 IP 和原有的 RSA 的对应关系。所以此时最简单的解决方法就是在‘机器 B’上删除原有的那条信息就 OK 了。
+Mac OS上盖条信息存在 用户住目录下&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;~/.ssh/known_hosts&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/img/ubuntu-4.png&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;/public/img/ubuntu-5.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;通过 ip 查找到该条记录删除之，即可。然后 ssh 重新连接。&lt;/p&gt;
+
+&lt;p&gt;如果是多个人连接‘机器 A’，还可以通过配置 RSA 来使用 ssh 远程连接，这样的话就不需要每次使用 ssh 远程的时候输入‘机器 A’上的用户密码了。这需要将‘机器 B’、‘机器 C’、‘机器 D’...上的 RSA 都保存在‘机器 A’上，具体配置请 Google 之。&lt;/p&gt;
+</description>
+        <pubDate>Wed, 22 Apr 2015 00:00:00 +0800</pubDate>
+        <link>http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/04/22/%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84-Ubuntu-%E7%8E%AF%E5%A2%83/</link>
+        <guid isPermaLink="true">http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/04/22/%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84-Ubuntu-%E7%8E%AF%E5%A2%83/</guid>
+        
+        <category>Ubuntu</category>
+        
+        
+        <category>技术博文</category>
+        
+      </item>
+    
+  </channel>
+</rss>

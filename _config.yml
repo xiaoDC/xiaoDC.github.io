@@ -1,0 +1,34 @@
+# Dependencies
+markdown:         rdiscount
+highlighter:      pygments
+
+#
+encoding:         "utf-8"
+# Permalinks
+permalink:        pretty
+
+paginate: 5
+
+gems: [jekyll-paginate]
+
+
+
+# Setup
+title:            fri3nds
+tagline:          'A craftsman typing carefully'
+description:      'Here is my personal weblog about technology and life.'
+url:              http://shelldone.com
+
+author:
+  name:           'fri3nds'
+  url:            https://github.com/xiaoDC
+
+
+# Custom vars
+version:          1.0.0
+
+# duoshuo
+comments:
+  provider : duoshuo
+  duoshuo :
+    short_name : chengzihan

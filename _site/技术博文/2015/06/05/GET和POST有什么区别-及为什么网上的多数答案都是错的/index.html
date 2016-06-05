@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      GET和POST有什么区别？及为什么网上的多数答案都是错的。 &middot; fri3nds
+    
+  </title>
+
+  <!-- CSS -->
+  <!-- <link rel="stylesheet" href="/public/css/syntax.css"> -->
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/pygments.css">
+  <link rel="stylesheet" href="/public/css/font-awesome.min.css">
+  <!-- <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400"> -->
+
+  <!-- Icons -->
+  <!-- <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/img/apple-touch-icon-144-precomposed.png"> -->
+  <link rel="shortcut icon" href="/public/img/chenglong.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- livereload test -->
+  <!--<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>-->
+
+  <!-- audioplayer -->
+  <script src="/public/js/jquery-1.11.1.js"></script>
+  <script src="/public/js/audioplayer/amazingaudioplayer.js"></script>
+  <link rel="stylesheet" type="text/css" href="/public/css/audioplayer/initaudioplayer-1.css">
+  <script src="/public/js/audioplayer/initaudioplayer-1.js"></script>
+
+</head>
+
+
+  <body class="">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-logo">
+      <a href="/"><img src="/public/img/chenglong.jpg"></a>
+    </div>
+    <p>Here is my personal weblog about technology and life.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/"><i class="fa fa-home fa-fw"></i>&nbsp 主页·&nbspHome</a>
+    <a class="sidebar-nav-item" href="/archive/"><i class="fa fa-file-text-o fa-fw"></i>&nbsp 归档·&nbspArchive</a>
+    <a class="sidebar-nav-item" href="/category/"><i class="fa fa-book fa-fw"></i>&nbsp 分类·&nbspCategory</a>
+    <a class="sidebar-nav-item" href="/tag/"><i class="fa fa-tags fa-fw"></i>&nbsp 标签·&nbspTag</a>
+    <a class="sidebar-nav-item" href="/about/"><i class="fa fa-hand-o-right fa-fw"></i>&nbsp 关于·&nbspAbout</a>
+    <!-- <span class="sidebar-nav-item"><i class="fa fa-info-circle">&nbsp&nbsp  </i>Currently v1.0.0</span> -->
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <div class="masthead-title">
+            <a href="/" title="Home">fri3nds</a>
+            <small>A craftsman typing carefully</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="container content">
+        <h2 class="post-name">Blog</h2>
+<div class="post">
+  <div class="post-heading inside">
+    <img src="/public/img/chenglong.jpg">
+    <h1 class="post-title">
+      <a class="post-title-blog" href="">
+        GET和POST有什么区别？及为什么网上的多数答案都是错的。
+      </a>
+    </h1>
+      <p class="post-info">
+        
+          转载  <a href="http://www.cnblogs.com/nankezhishi/archive/2012/06/09/getandpost.html">木-叶</a>
+        
+      </p>
+      <span class="post-info"><i class="fa fa-calendar"></i>&nbsp2015/06/05  </span>
+      <span class="post-info"><i class="fa fa-book"></i>&nbsp<a href="/category/index.html#技术博文">技术博文</a></span>
+      <span class="post-info"><i class="fa fa-tags"></i>&nbsp<a href="/tag/index.html#Http">Http</a></span>
+      <span class="post-info">&nbsp<a href="/tag/index.html#"></a></span>
+      <span class="post-info">&nbsp<a href="/tag/index.html#"></a></span>
+  </div>
+  <div class="post-content">
+    <p>初看到这篇文章的时候，觉得标题又是一个噱头。因为技术圈很多时候也有点像娱乐圈，很多人都只是为了搏眼球。但是闲来无聊就看了一下。看了一点就觉得被打脸了。原文作者文章写的确实很不错。故此在这儿转发，以表敬意。</p>
+
+<blockquote><p>如果有人问你，GET 和 POST，有什么区别？你会如何回答？</p>
+
+<h4>我的回答</h4>
+
+<p>前几天有人问我这个问题。我说 GET 是用于获取数据的，POST，一般用于将数据发给服务器之用。</p>
+
+<p>这个答案好像并不是他想要的。于是他继续追问有没有别的区别？我说这就是个名字而已，如果服务器支持，他完全可以把 GET 改个名字叫 GET2。他反问道，那就是单纯的名字上的区别喽？我想了想，我觉得如果说再具体的区别，只能去看 RFC 文档了，还要取决于服务器（指 Apache，IIS）的具体实现。但我不得不承认，我的确没有仔细看过 HTTP 的 RFC 文档。于是我说，我对 HTTP 协议不太熟悉。这个问题也就结束了。</p>
+
+<h4>最普遍的答案</h4>
+
+<p>回来之后寻思了很久，他到底是想问我什么？我一直就觉得 GET 和 POST 没有什么除了语义之外的区别，自打我开始学习 Web 编程开始就是这么理解的。</p>
+
+<p>可能很多人都已经猜到了，他要的答案是：</p>
+
+<ol>
+<li><p>GET使用 URL 或 Cookie 传参。而 POST 将数据放在 BODY 中。</p></li>
+<li><p>GET 的 URL 会有长度上的限制，则 POST 的数据则可以非常大。</p></li>
+<li><p>POST 比 GET 安全，因为数据在地址栏上不可见。</p></li>
+</ol>
+
+
+<p>但是很不幸，这些区别全是错误的，更不幸的是，这个答案还是 <a href="https://www.google.com.hk/search?q=get%E5%92%8Cpost%E7%9A%84%E5%8C%BA%E5%88%AB&amp;ie=utf-8&amp;oe=utf-8&amp;aq=t&amp;rls=org.mozilla:zh-CN:official&amp;client=firefox-a&amp;channel=fflb&amp;gws_rd=cr,ssl">Google搜索的头版头条</a>，然而我根本没想着这些是答案，因为在我看来他们都是错的。我来一一解释一下。</p>
+
+<h4>GET 和 POST 与数据如何传递没有关系</h4>
+
+<p>GET 和 POST 是由<a href="https://www.w3.org/Protocols/rfc2616/rfc2616.html">HTTP协议</a>定义的。在 HTTP 协议中，Method 和 Data（URL， Body， Header）是正交的两个概念，也就是说，使用哪个 Method 与应用层的数据如何传输是没有相互关系的。</p></blockquote>
+
+<p>这个如果你自己有过实际的尝试，就会完全同意原作者的。
+博主在开发中就深有体会，我们没有用一些 ajax 的库，而是自己基于 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch api</a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> 封装了自己的一个名为 WebAPIUtils 的网络请求库，其中默认根据参数 body 是否为空对象，来确定 GET 或者是 POST 请求，当然你也可以指定 Method。发现原来 GET 或者是 POST 和 body 是没有关系的。只是我们一般都是这么理解的，一直是很模凌两可。(好，我们继续原作者的文章)</p>
+
+<blockquote><p>HTTP 没有要求，如果 Method 是 POST 数据就要放在 BODY 中。也没有要求，如果Method 是 GET，数据（参数）就一定要放在 URL 中而不能放在 BODY 中。</p>
+
+<p>那么，网上流传甚广的这个说法是从何而来的呢？我在 <a href="https://www.w3.org/TR/REC-html40/interact/forms.html#h-17.13.1">HTML标准中，找到了相似的描述</a>。这和网上流传的说法一致。但是这只是 HTML 标准对 HTTP 协议的用法的约定。怎么能当成 GET 和 POST 的区别呢？</p>
+
+<p>而且，现代的 Web Server 都是支持 GET 中包含 BODY 这样的请求。虽然这种请求不可能从浏览器发出，但是现在的 Web Server 又不是只给浏览器用，已经完全地超出了 HTML 服务器的范畴了。</p>
+
+<p>知道这个有什么用？我不想解释了，有时候就得自己痛一次才记得住。</p>
+
+<h4>HTTP 协议对 GET 和 POST 都没有对长度的限制</h4>
+
+<p>HTTP 协议明确地指出了，HTTP 头和 Body 都没有长度的要求。而对于 URL 长度上的限制，有两方面的原因造成：</p>
+
+<ol>
+<li><p>浏览器。据说早期的浏览器会对 URL 长度做限制。据说 IE 对 URL 长度会限制在 2048 个字符内（流传很广，而且无数同事都表示认同）。但我自己试了一下，我构造了 90K 的 URL 通过 IE9 访问 live.com，是正常的。网上的东西，哪怕是 Wikipedia 上的，也不能信。</p></li>
+<li><p>服务器。URL 长了，对服务器处理也是一种负担。原本一个会话就没有多少数据，现在如果有人恶意地构造几个几 M 大小的 URL，并不停地访问你的服务器。服务器的最大并发数显然会下降。另一种攻击方式是，把告诉服务器 Content-Length 是一个很大的数，然后只给服务器发一点儿数据，嘿嘿，服务器你就傻等着去吧。哪怕你有超时设置，这种故意的次次访问超时也能让服务器吃不了兜着走。有鉴于此，多数服务器出于安全啦、稳定啦方面的考虑，会给 URL 长度加限制。但是这个限制是针对所有 HTTP 请求的，与 GET、POST 没有关系。</p></li>
+</ol>
+
+
+<h4>安全不安全和 GET、POST 没有关系</h4>
+
+<p>我觉得这真是中国特色。我讲个小段子，大家应该可以体会出这个说法多么的可笑。</p>
+
+<p>觉得 POST 数据比 GET 数据安全的人会说</p>
+
+<p>“防君子不防小人；中国小白多，能防小白用户就行了。”</p>
+
+<p>“哼，”我不以为然，“那你怎么不说，URL 参数都 Encode 过了，或是 Base64 一下，小白也看不懂啊。”</p>
+
+<p>那人反驳道，“Encode 太简单了，聪明点儿的小白很容易就可以 Decode 并修改掉。”</p>
+
+<p>我笑道，“五十步笑百步耳，再聪明点儿的小白还会截包并重发呢，Opera 就有这功能。”</p>
+
+<p>那人阴险地祭出神器——最终解释权，说，“这个不算小白。”</p>
+
+<p>我日啊。</p></blockquote>
+
+<p>网络安全其实就是这样的，不过你用 GET 和 POST 都是然并卵。调试工具一打开，你往那个地址发送了什么东西全都可以看的见。如果在被截包，简直就是没有穿衣服啊。</p>
+
+<blockquote><p>最后一点儿感想</p>
+
+<p>我之前一直做 Windows 桌面应用，对 Web 开发无甚了解，直到一年多前转做服务器端开发，才开始接触到 HTTP。（注意，我说的是 HTTP，不是 HTML 。服务器开放接口是基于 REST 理念设计的，使用的协议是H TTP，但是传输的内容不是 HTML。这不是 Web Server，而是一个 Web Service）</p>
+
+<p>所以我对于 GET 和 POST 的理解，是纯粹地来源于 HTTP 协议。他们只有一点根本区别，简单点儿说，一个用于获取数据，一个用于修改数据。具体的请参考 RFC 文档。</p>
+
+<p>如果一个人一开始就做 Web 开发，很可能把 HTML 对 HTTP 协议的使用方式，当成 HTTP 协议的唯一的合理使用方式。从而犯了以偏概全的错误。</p>
+
+<p>可能有人会觉得我钻牛角尖。我只是不喜欢模棱两可，不喜欢边界不清、概念不明，不喜欢“拿来主义”，也不喜欢被其它喜欢钻牛角尖的人奚落得无地自容。</p>
+
+<p>“知之为知之，不知为不知，是知也。”</p></blockquote>
+
+<h4>感想</h4>
+
+<p>首先，感谢原作者分享这篇博文。其次，很敬佩原作者这种精神。</p>
+
+<h4>安全问题</h4>
+
+<p>web 应用的安全问题不能靠 GET 和 POST 简单地解决的。后续文章会讲讲 web 应用的安全问题，敬请期待。</p>
+
+  </div>
+</div>
+
+<!-- <div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/05/04/Margin%E6%8A%98%E5%8F%A0-%E7%AB%99%E5%9C%A8%E8%AE%BE%E8%AE%A1%E8%80%85%E7%9A%84%E8%A7%92%E5%BA%A6%E6%80%9D%E8%80%83/">
+            Margin折叠，站在设计者的角度思考
+            <small>04 May 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/04/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BB%8B%E7%BB%8D/">
+            关于操作系统的一些介绍
+            <small>22 Apr 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/04/22/%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84-Ubuntu-%E7%8E%AF%E5%A2%83/">
+            搭建自己的 Ubuntu 环境（一）
+            <small>22 Apr 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div> -->
+
+
+<div class="sub_pagination">
+
+  
+    <a class="sub_pagination-item" id="lastest">已经是最新一篇&nbsp<i class="fa fa-unlink"></i></a>
+  
+  
+    <a class="sub_pagination-item newer" href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/05/04/Margin%E6%8A%98%E5%8F%A0-%E7%AB%99%E5%9C%A8%E8%AE%BE%E8%AE%A1%E8%80%85%E7%9A%84%E8%A7%92%E5%BA%A6%E6%80%9D%E8%80%83/">Margin折叠，站在设计者的角度思考&nbsp<i class="fa fa-share"></i></a>
+  
+</div>
+
+
+<!-- <div class="comments"> -->
+<h2>Comments</h2>
+
+
+
+<!-- Duoshuo Comment BEGIN -->
+<div id="comment">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-title="GET和POST有什么区别？及为什么网上的多数答案都是错的。"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {
+        short_name: "chengzihan"
+    };
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        // ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.src = '../../../../../public/js/duoshuo.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+<!-- Duoshuo Comment END -->
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+    <div class="footer">
+  <p>  Copyright © 2016 - <a href="/">fri3nds</a> - Powered by
+    <a href="http://jekyllrb.com/">Jekyll</a>.
+    <a href="http://github.com/">Github</a>
+  </p>
+  <ul>
+    <!-- <li><a href="/"><i class="fa fa-twitter fa-2x"></i></a></li> -->
+    <li><a href="https://github.com/xiaoDC"><i class="fa fa-github fa-2x"></i></a></li>
+    <!-- <li><a href="https://www.linkedin.com/nhome/?trk="><i class="fa fa-linkedin fa-2x"></i></a></li> -->
+  </ul>
+</div>
+
+
+    <!-- "The ending isn’t any more important than the moments leading to it." -Dr. Eva Rosalene, To The Moon -->
+  </body>
+</html>
+
