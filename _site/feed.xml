@@ -5,9 +5,291 @@
     <description>Here is my personal weblog about technology and life.</description>
     <link>http://shelldone.com/</link>
     <atom:link href="http://shelldone.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 05 Jun 2016 14:37:35 +0800</pubDate>
-    <lastBuildDate>Sun, 05 Jun 2016 14:37:35 +0800</lastBuildDate>
-    <generator>Jekyll v3.1.6</generator>
+    <pubDate>Mon, 26 Sep 2016 11:34:27 +0800</pubDate>
+    <lastBuildDate>Mon, 26 Sep 2016 11:34:27 +0800</lastBuildDate>
+    <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>异次元杀阵之最大子段和的破解之法</title>
+        <description>&lt;h3&gt;1. 前言&lt;/h3&gt;
+
+&lt;p&gt;首先解释一下这个标题。&lt;/p&gt;
+
+&lt;p&gt;最近看了一个关于密室的系列电影，共有三部，个人只觉得第一部比价好看(ps:第三部还没有看)，它有两个名字，一个叫《心慌方》，比较文艺；两一个也叫《心慌方》，当然不可能了，其实是《异次元杀阵》，这个听上去比较科技感强一点。&lt;/p&gt;
+
+&lt;p&gt;最大子段和，也叫&lt;code&gt;最大连续子数列和&lt;/code&gt;,AC圈都是这么叫的吧。我个人喜欢前面一个。最近也是看到有博主也写关于这个问题的算法，所以自己也想提笔试着写写(非喜勿喷)。关于&lt;code&gt;最大连续子数列和&lt;/code&gt;的解释可以看 &lt;a href=&quot;https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E5%88%97%E9%97%AE%E9%A2%98&quot;&gt;维基百科&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;为什么把两者扯到一起，因为我下面要讲的是解决这个问题的过程，如何演化！&lt;/p&gt;
+
+&lt;h3&gt;2. 坐标&lt;/h3&gt;
+
+&lt;p&gt;最容易想到的方法就是枚举，所以的情况都枚举出来，比较一下大小就可以了。&lt;/p&gt;
+
+&lt;p&gt;以数组
+&lt;code&gt;
+ A = [-2, 11, -4, 13, -5, -2]
+&lt;/code&gt;
+为例。&lt;/p&gt;
+
+&lt;p&gt;关于如何枚举，我个人容易想到的是2种；&lt;/p&gt;
+
+&lt;h5&gt;(1) 按子序列的长度枚举&lt;/h5&gt;
+
+&lt;h5&gt;(2) 按子序列的起点、终点枚举&lt;/h5&gt;
+
+&lt;p&gt;二者其实是一样的，知道起始点就知道长度了，只是第二种记录起始点听上去顺理成章一点。本质上时间复杂度都是&lt;code&gt;O(n^3)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;解法1&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var A = [-2, 11, -4, 13, -5, -2];
+var ans = A[0];
+var s;
+
+for(var n = 1; n &amp;lt;= A.length; n++) {
+  for(var i = 0; i &amp;lt; A.length; i++) {
+    s = 0;
+    for(var j = 0; j &amp;lt; n; j++) {
+      s += A[i+j];
+    }
+    if (s &amp;gt; ans) {
+      ans = s;
+    }
+  }
+}
+
+console.log(ans, '=========');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;解法2&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var A = [-2, 11, -4, 13, -5, -2];
+var ans = A[0];
+var s;
+
+for(var i = 0; i &amp;lt; A.length; i++) {
+  for(var j = i; j &amp;lt; A.length; j++) {
+    s = 0;
+    for(var k = i; k &amp;lt;= j ; k++) {
+      s += A[k];
+    }
+    if (s &amp;gt; ans) {
+      ans = s;
+    }
+  }
+}
+
+console.log(ans, '=========');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;两中方法其实都是通过记录起始点的手段来来解决问题，也就是记录&lt;code&gt;坐标&lt;/code&gt;，有点像《心慌方》中理科女，通过坐标来辨识安全的房间.
+(在更新 ans 的时候，可以记录相应的起始点，就得到我们想要的&lt;code&gt;坐标&lt;/code&gt;了)&lt;/p&gt;
+
+&lt;p&gt;两种枚举的方法都其实是引入了两个变量，在解决很多数学问题上，一些问题通过&lt;code&gt;消元&lt;/code&gt;和&lt;code&gt;降次&lt;/code&gt;基本上可以解决了。
+这种思路也适用于算法设计。
+此外，计算机很多的问题都是&lt;code&gt;量&lt;/code&gt;导致的，如果&lt;code&gt;量&lt;/code&gt;很小的话，问题很容易解决。&lt;/p&gt;
+
+&lt;p&gt;仔细观察 &lt;code&gt;解法2&lt;/code&gt; 可以发现，我们很多次循环都是在求解 A[i...j] 的累加和，如何避免这种重复的劳动了，
+在计算机上面，可以使用另外一种优化手段，&lt;code&gt;空间换时间&lt;/code&gt; ，当然也存在 &lt;code&gt;时间换空间&lt;/code&gt; 的&lt;/p&gt;
+
+&lt;p&gt;由此可以引申出 3 种优化思路：&lt;/p&gt;
+
+&lt;h5&gt;(1) &lt;code&gt;空间换时间&lt;/code&gt;&lt;/h5&gt;
+
+&lt;h5&gt;(2) 通过降&quot;量&quot; 来优化这个问题的解(计算机)&lt;/h5&gt;
+
+&lt;h5&gt;(3) 通过 &quot;消元&quot; 或者 &quot;降次&quot; 来优化这个问题的解(数学)&lt;/h5&gt;
+
+&lt;h3&gt;3. 备忘录&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;解法2&lt;/code&gt; 中多次求解 A[i...j] 的累加和，如果能够花费一些空间把它记录下来，不就是省掉一层循环了，降低了时间复杂度；
+实际上很多问题都可以通过备忘录，来省去重复的工作。&lt;/p&gt;
+
+&lt;p&gt;如果用 sum[i] 表示 A 中 A[0] 到 A[i] 的累加和，那么 A[i..j] = sum[j] - sum[i-1];
+我们在外层计算出数组 sum，记录下来，在需要用到 A[i...j] 的时候，通过简单的减法运算就可以实现了，减少了一层循环，时间复杂度就降低到 &lt;code&gt;O(n^2)&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+var A = [-2, 11, -4, 13, -5, -2];
+var sum = [];
+sum[0] = A[0];
+var ans = A[0];
+var s;
+
+for(var i = 1; i &amp;lt; A.length; i++) {
+  sum[i] = sum[i-1] + A[i];
+}
+for(i = 1; i &amp;lt; A.length; i++) {
+  for(var j = i; j &amp;lt; A.length; j++) {
+    s = sum[j] - sum[i-1];
+    if (s &amp;gt; ans) {
+      ans = s;
+    }
+  }
+}
+
+console.log(ans, '=========');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;4. 降 “量”&lt;/h3&gt;
+
+&lt;p&gt;尝试了第一种优化方式，确实得到了一些优化，那继续尝试第二种咯。&lt;/p&gt;
+
+&lt;p&gt;一般在很多问题的处理上，都是通过降 “量” 来优化，比如预先排除一些没有用的数据，来降低数据的量级。而我们这个问题是没有办法
+直接通过预先处理、筛选一些数据解决的。&lt;/p&gt;
+
+&lt;p&gt;但是最大子段和问题，我们可以换一种方式来理解降 “量”。&lt;/p&gt;
+
+&lt;p&gt;如果整个序列只有 1 个或者 2 个元素，问题是不是简单很多。我们解决只有 1 个元素的序列的最大子段和问题，那么就可以解决只有 2 个
+元素的最大子段和，进而 4 个、8 个，......&lt;/p&gt;
+
+&lt;p&gt;是不是突然感觉有点熟悉，&lt;code&gt;分治&lt;/code&gt; 感觉已经呼之欲出了。对，就是 &lt;code&gt;分而治之&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;求解整个序列的最大子段和，我们可以分解成两部分:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;求左半部分的最大子段和，&lt;/p&gt;
+
+&lt;p&gt;求右半部分的最大子段和，&lt;/p&gt;
+
+&lt;p&gt;根据左、右两个半部分的最大子段和，求解整个序列的最大子段&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;求解左、右半部分的最大字段和最后都可以分解成 “只有 1 个元素的序列的最大子段和问题”，这大概就是&lt;code&gt;一个小目标&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;那么 “只有 2 个元素的序列的最大子段和问题” 可以通过上面的&lt;code&gt;小目标&lt;/code&gt;来实现。如果左半部分的最大子段和是 0，那整个序列的最大子段和就在右半部分；如果右半部分的最大子段和是 0，那整个序列的最大子段和就在左半部分；(如果左右都为 0，上述那个如果都满足，依旧是 0)
+剩余的情况就是整个序列的最大子段和由 &lt;code&gt;左半部分的最大子段和&lt;/code&gt; 和 &lt;code&gt;右半部分的最大字段和&lt;/code&gt; 共同组成。&lt;/p&gt;
+
+&lt;p&gt;这其实就是&lt;code&gt;分治&lt;/code&gt;问题的核心，如何由小的问题汇总大的问题，怎么由&lt;code&gt;先赚它一个亿&lt;/code&gt;到成为&lt;code&gt;首富&lt;/code&gt;的问题。&lt;/p&gt;
+
+&lt;p&gt;具体问题具体分析，最大子段和，也叫最大连续子数列和。关键词是连续。
+于是这个问题就是最大连续子序列和要么出现在数组左半部分，要么出现在数组右半部分，要么横跨左右两半部分。横跨左右两半部分就受到连续这个关键词的限制。&lt;/p&gt;
+
+&lt;p&gt;具体解法&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var A = [-2, 11, -4, 13, -5, -2];
+function MaxSubSequence(left, right) {
+  if (left &amp;gt; right) {
+    return 0;
+  }
+  // 只有 1 个元素的序列
+  if (left === right) {
+    return A[left];
+  }
+
+  // 划分为 “左半部分的最大子段和” 和 &quot;右半部分的最大子段和&quot;
+  var mid = (left + right) / 2;
+  mid &amp;gt;&amp;gt;&amp;gt;= 0;
+  var leftMaxSubSequence = MaxSubSequence(left, mid);
+  var rightMaxSubSequence = MaxSubSequence(mid + 1, right);
+
+  // 求横跨左右的最大连续子序列左半部分
+  var lmax = A[mid], lsum = 0;
+  for(var i = mid; i &amp;gt;= left; i--) {
+    lsum += A[i];
+    if (lsum &amp;gt; lmax) {
+      lmax = lsum;
+    }
+  }
+
+  // 求横跨左右的最大连续子序列右半部分
+  var rmax = A[mid + 1], rsum = 0;
+  for(var j = mid + 1; j &amp;lt;= right; j++) {
+    rsum += A[j];
+    if (rsum &amp;gt; rmax) {
+      rmax = rsum;
+    }
+  }
+  return Math.max(lmax + rmax, leftMaxSubSequence, rightMaxSubSequence); //返回三者最大值
+}
+
+var ans = MaxSubSequence(0, A.length - 1);
+console.log(ans, '===============');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;整个解法的时间复杂度是 &lt;code&gt;O(n*lgn)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;其实我们，可以看到解决这个问题的过程中，我们实际上还是依赖于两个变量，left 和 right，并没有&lt;code&gt;消元&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;接下来，我们试试&lt;code&gt;消元&lt;/code&gt;吧。&lt;/p&gt;
+
+&lt;h3&gt;5. 消元&lt;/h3&gt;
+
+&lt;p&gt;前面的两种优化手段依旧和&lt;code&gt;坐标&lt;/code&gt;有关系，还是二元，我们尝试一下消元。&lt;/p&gt;
+
+&lt;p&gt;一直停留在最大连续子数列和起点和终点上，一直不能愉快地消元，实际这个问题，不管原序列有多少个元素，都有起点和终点，但是
+如果只有 1 个元素的话，是不是起点和终点重合，如果原序列很长，就是终点很远，但是起点还是起点，不管原序列多长，变化一直是终点，
+所以可不可以不关心起点，只 care 我们的终点，把起点这个&lt;code&gt;元&lt;/code&gt;消除掉。&lt;/p&gt;
+
+&lt;p&gt;ok，于是我们假设 max[j] 是 序列 A[0...j] 的最大字段和。能不能通过类似数学归纳法来求得一个递推公式呢？！&lt;/p&gt;
+
+&lt;p&gt;我们需要解决的就是如何从 max[j] 求出 max[j+1] 的值。&lt;/p&gt;
+
+&lt;p&gt;最大连续子数列和，其中关键就是连续。
+从 max[j] 到 max[j+1] ，考虑连续与否就可以了。&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;ol type=&quot;a&quot;&gt;
+&lt;li&gt;max[j] 的终点是 A[j]&lt;/li&gt;
+&lt;li&gt;max[j] 的终点不是 A[j]&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;h4&gt;a. max[j] 的终点是 A[j]&lt;/h4&gt;
+
+&lt;p&gt;那么 max[j+1] = Max(max[j-1], max[j-1] + A[j])&lt;/p&gt;
+
+&lt;h4&gt;b. max[j] 的终点不是 A[j]&lt;/h4&gt;
+
+&lt;p&gt;假设 max[j] 的终点是 A[m]
+那么 max[j+1] = Max(max[j-1], max[j-1] + (A[m+1] + A[m+2] + ... + A[j]) )&lt;/p&gt;
+
+&lt;p&gt;综上，在递推的过程中我们记录终点 m 就可以了.&lt;/p&gt;
+
+&lt;p&gt;所以在遍历的 j 的时候，记录更新 m 就可以了。而记录终点 m 也是为了求 (A[m+1] + A[m+2] + ... + A[j])，
+tmp 记录 A[m+1] 到 A[j-1] 的累积和&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;如果 tmp + A[j] + max[j-1] &gt; max[j-1] ，max[j] = max[j-1] + tmp + A[j], tmp 也相应地更新为 0；
+如果 tmp + A[j] + max[j-1] &amp;lt;= max[j-1] ，max[j] = max[j-1], tmp 也相应地更新为 tmp + A[j]；&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;具体解法&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var A = [-2, 11, -4, 13, -5, -2];
+var ans = 0;
+var tmp = 0; // 记录 A[m+1] + A[m+2] + ... + A[j-1]
+
+for(var j = 0; j &amp;lt; A.length; j++) {
+  if (tmp + A[j] &amp;gt; 0) {
+    ans += A[j] + tmp;
+    tmp = 0;
+  } else {
+    if (j != 0 ) { // 处理序列第一个元素 A[0] &amp;lt; 0
+      tmp += A[j];
+    }
+  }
+}
+
+console.log(ans, '=========');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;该解法的时间复杂度为 &lt;code&gt;O(n)&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3&gt;6. 降维&lt;/h3&gt;
+
+&lt;p&gt;降维，通过低维打击高维，才是王道。上面的 &lt;code&gt;O(n)&lt;/code&gt; 算法中，&lt;code&gt;max[]&lt;/code&gt; 只需要 &lt;code&gt;max[j]&lt;/code&gt; 和 &lt;code&gt;max[j-1]&lt;/code&gt;，所以可以用一个变量 &lt;code&gt;ans&lt;/code&gt; 即可解决问题。 在很多动态规划的算法中，可以通过&lt;code&gt;降维&lt;/code&gt;来实现空间复杂度的优化， 例如 &lt;code&gt;dp[i][j] = Max(dp[i-1][j], dp[i][j-1])&lt;/code&gt; 之类的， 数组 &lt;code&gt;dp[][]&lt;/code&gt; 只用到了 &lt;code&gt;dp[i-1]&lt;/code&gt; 和 &lt;code&gt;dp[i]&lt;/code&gt;，我们完全可以通过 &lt;code&gt;dpmin[]&lt;/code&gt; 来取代 &lt;code&gt;dp[][]&lt;/code&gt;，优化空间复杂度。&lt;/p&gt;
+
+&lt;p&gt;还有一些动态规划的问题中，例如 &lt;code&gt;dp[i][j] = Max(∑dp[i-1][n](0&amp;lt;=n&amp;lt;j)*A[i][j], A[i][j])&lt;/code&gt; 之类的， &lt;code&gt;dp[i]&lt;/code&gt; 的状态与整个 &lt;code&gt;dp[i-1]&lt;/code&gt; 数组都有关系的时候， 我们也可以用过 &lt;code&gt;b[j] = Max(∑a[n](0&amp;lt;=n&amp;lt;j)*A[i][j], A[i][j]); a[] = b[]&lt;/code&gt;，&lt;code&gt;a[]&lt;/code&gt; 和 &lt;code&gt;b[]&lt;/code&gt; 做一个交换来优化空间复杂度，当然这样每次交换也牺牲了一部分的效率。&lt;/p&gt;
+
+&lt;h3&gt;扩展&lt;/h3&gt;
+
+&lt;p&gt;文章提到的一些解法和优化方法，实际上被大神设计出来，掌握这些最本质的东西，在解决实际问题的时候，有一个渐进式思维，擅用算法，逐步优化，我觉得才是异次元方阵的破解之法。
+如果您感兴趣的话，也可以去了解&lt;code&gt;动态规划&lt;/code&gt;，&lt;code&gt;分治&lt;/code&gt;，&lt;code&gt;备忘录&lt;/code&gt;，&lt;code&gt;最大连续子矩阵和&lt;/code&gt; 等。我后续也会慢慢去介绍相关的东西。&lt;/p&gt;
+</description>
+        <pubDate>Sun, 25 Sep 2016 00:00:00 +0800</pubDate>
+        <link>http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2016/09/25/%E5%BC%82%E6%AC%A1%E5%85%83%E6%9D%80%E9%98%B5%E4%B9%8B%E6%9C%80%E5%A4%A7%E5%AD%90%E6%AE%B5%E5%92%8C%E7%9A%84%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95/</link>
+        <guid isPermaLink="true">http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2016/09/25/%E5%BC%82%E6%AC%A1%E5%85%83%E6%9D%80%E9%98%B5%E4%B9%8B%E6%9C%80%E5%A4%A7%E5%AD%90%E6%AE%B5%E5%92%8C%E7%9A%84%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95/</guid>
+        
+        <category>算法</category>
+        
+        
+        <category>技术博文</category>
+        
+      </item>
     
       <item>
         <title>GET和POST有什么区别？及为什么网上的多数答案都是错的。</title>
@@ -101,9 +383,9 @@
 
 &lt;p&gt;web 应用的安全问题不能靠 GET 和 POST 简单地解决的。后续文章会讲讲 web 应用的安全问题，敬请期待。&lt;/p&gt;
 </description>
-        <pubDate>Fri, 05 Jun 2015 00:00:00 +0800</pubDate>
-        <link>http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/06/05/GET%E5%92%8CPOST%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB-%E5%8F%8A%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BD%91%E4%B8%8A%E7%9A%84%E5%A4%9A%E6%95%B0%E7%AD%94%E6%A1%88%E9%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</link>
-        <guid isPermaLink="true">http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/06/05/GET%E5%92%8CPOST%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB-%E5%8F%8A%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BD%91%E4%B8%8A%E7%9A%84%E5%A4%9A%E6%95%B0%E7%AD%94%E6%A1%88%E9%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</guid>
+        <pubDate>Sun, 05 Jun 2016 00:00:00 +0800</pubDate>
+        <link>http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2016/06/05/GET%E5%92%8CPOST%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB-%E5%8F%8A%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BD%91%E4%B8%8A%E7%9A%84%E5%A4%9A%E6%95%B0%E7%AD%94%E6%A1%88%E9%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</link>
+        <guid isPermaLink="true">http://shelldone.com/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2016/06/05/GET%E5%92%8CPOST%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB-%E5%8F%8A%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BD%91%E4%B8%8A%E7%9A%84%E5%A4%9A%E6%95%B0%E7%AD%94%E6%A1%88%E9%83%BD%E6%98%AF%E9%94%99%E7%9A%84/</guid>
         
         <category>Http</category>
         
@@ -139,7 +421,7 @@
 &lt;ol&gt;
 &lt;li&gt;&lt;p&gt;both belong to in-flow block-level boxes that participate in the same block formatting context&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;no line boxes, no clearance, no padding and no border separate them (Note that certain zero-height line boxes (see 9.4.2) are ignored for this purpose.)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;both belong to vertically-adjacent box edges, i.e. form one of the following pairs: * top margin of a box and top margin of its first in-flow child * bottom margin of box and top margin of its next in-flow following sibling * bottom margin of a last in-flow child and bottom margin of its parent if the parent has &#39;auto&#39; computed height * top and bottom margins of a box that does not establish a new block formatting context and that has zero computed &#39;min-height&#39;, zero or &#39;auto&#39; computed &#39;height&#39;, and no in-flow children&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;both belong to vertically-adjacent box edges, i.e. form one of the following pairs: * top margin of a box and top margin of its first in-flow child * bottom margin of box and top margin of its next in-flow following sibling * bottom margin of a last in-flow child and bottom margin of its parent if the parent has 'auto' computed height * top and bottom margins of a box that does not establish a new block formatting context and that has zero computed 'min-height', zero or 'auto' computed 'height', and no in-flow children&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 
@@ -147,13 +429,13 @@
 
 &lt;ol&gt;
 &lt;li&gt;&lt;p&gt;Margins between a floated box and any other box do not collapse (not even between a float and its in-flow children).&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Margins of elements that establish new block formatting contexts (such as floats and elements with &#39;overflow&#39; other than &#39;visible&#39;) do not collapse with their in-flow children.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Margins of elements that establish new block formatting contexts (such as floats and elements with 'overflow' other than 'visible') do not collapse with their in-flow children.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Margins of absolutely positioned boxes do not collapse (not even with their in-flow children).&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Margins of inline-block boxes do not collapse (not even with their in-flow children).&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;The bottom margin of an in-flow block-level element always collapses with the top margin of its next in-flow block-level sibling, unless that sibling has clearance.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The top margin of an in-flow block element collapses with its first in-flow block-level child&#39;s top margin if the element has no top border, no top padding, and the child has no clearance.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The bottom margin of an in-flow block box with a &#39;height&#39; of &#39;auto&#39; and a &#39;min-height&#39; of zero collapses with its last in-flow block-level child&#39;s bottom margin if the box has no bottom padding and no bottom border and the child&#39;s bottom margin does not collapse with a top margin that has clearance.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;A box&#39;s own margins collapse if the &#39;min-height&#39; property is zero, and it has neither top or bottom borders nor top or bottom padding, and it has a &#39;height&#39; of either 0 or &#39;auto&#39;, and it does not contain a line box, and all of its in-flow children&#39;s margins (if any) collapse.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The top margin of an in-flow block element collapses with its first in-flow block-level child's top margin if the element has no top border, no top padding, and the child has no clearance.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The bottom margin of an in-flow block box with a 'height' of 'auto' and a 'min-height' of zero collapses with its last in-flow block-level child's bottom margin if the box has no bottom padding and no bottom border and the child's bottom margin does not collapse with a top margin that has clearance.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A box's own margins collapse if the 'min-height' property is zero, and it has neither top or bottom borders nor top or bottom padding, and it has a 'height' of either 0 or 'auto', and it does not contain a line box, and all of its in-flow children's margins (if any) collapse.&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
 
