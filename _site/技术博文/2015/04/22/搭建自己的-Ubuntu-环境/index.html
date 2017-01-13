@@ -66,7 +66,7 @@
 
   <div class="sidebar-item">
     <p>
-      &copy; 2016. All rights reserved.
+      &copy; 2017. All rights reserved.
     </p>
   </div>
 </div>
@@ -106,60 +106,53 @@
       <span class="post-info">&nbsp<a href="/tag/index.html#"></a></span>
   </div>
   <div class="post-content">
-    <h4>写在前面</h4>
-
+    <h4 id="写在前面">写在前面</h4>
 <p>安装 Ubuntu 后，为了方便操作，选择使用 SSH 来远程操作 Ubuntu，这样不用两台机子来回操作，在一台机器上就可以操作另外一个机器，这样就方便了很多。
 ssh是一种安全协议，主要用于给远程登录会话数据进行加密，保证数据传输的安全，现在介绍一下如何在Ubuntu 14.04上安装和配置ssh</p>
 
-<h4>工具／原料</h4>
-
+<h4 id="工具原料">工具／原料</h4>
 <p>1.Ubuntu 14.04</p>
 
-<h4>安装部署 SSH 服务器</h4>
-
+<h4 id="安装部署-ssh-服务器">安装部署 SSH 服务器</h4>
 <p>下面的操作都必须在你的 Ubuntu 机器上，因为没有 SSH 服务器端，你根本没有办法连接到 Ubuntu 机器上。</p>
 
-<h3>更新源列表</h3>
-
-<p>打开“终端窗口”或者使用快捷键“ctrl＋alt＋t”打开，在终端中输入“sudo apt-get update”-->回车-->,输入当前登陆用户的密码，回车即可。
+<h3 id="更新源列表">更新源列表</h3>
+<p>打开“终端窗口”或者使用快捷键“ctrl＋alt＋t”打开，在终端中输入“sudo apt-get update”–&gt;回车–&gt;,输入当前登陆用户的密码，回车即可。
 <img src="/public/img/ubuntu-1.png" alt="" /></p>
 
-<h5>安装SSH</h5>
+<h5 id="安装ssh">安装SSH</h5>
+<p>在终端中输入“sudo apt-get install openssh-server”–&gt;回车–&gt;按要求输入“Y”或者“n”–&gt;回车，完成安装</p>
 
-<p>在终端中输入“sudo apt-get install openssh-server”-->回车-->按要求输入“Y”或者“n”-->回车，完成安装</p>
-
-<h5>查看SSH服务是否启动</h5>
-
-<p>在终端输入“sudo ps -e | grep ssh”-->回车-->有 sshd，说明 ssh 服务已经启动，如果没有启动，输入“sudo service ssh start”-->回车-->ssh服务就会启动。
+<h5 id="查看ssh服务是否启动">查看SSH服务是否启动</h5>
+<p>在终端输入“sudo ps -e | grep ssh”–&gt;回车–&gt;有 sshd，说明 ssh 服务已经启动，如果没有启动，输入“sudo service ssh start”–&gt;回车–&gt;ssh服务就会启动。
 <img src="/public/img/ubuntu-2.png" alt="" /></p>
 
-<h4>ssh 登陆</h4>
-
-<p>以上的步骤基本上就完成安装了，一些具体的可能需要配置 ssh 服务器，在终端中输入“sudo vim /etc/ssh/sshd_config”-->回车，使用 vim 修改其中的响应配置。</p>
+<h4 id="ssh-登陆">ssh 登陆</h4>
+<p>以上的步骤基本上就完成安装了，一些具体的可能需要配置 ssh 服务器，在终端中输入“sudo vim /etc/ssh/sshd_config”–&gt;回车，使用 vim 修改其中的响应配置。</p>
 
 <p>接下来就是其他机器通过 ssh 来登陆到改 Ubuntu 了。我们称刚才安装 ssh  服务器端的 Ubuntu 系统的机器为 A，那么我们其他的机器 B 想通过 ssh 来远程到机器 A的话，就必须在机器 B 上安装 ssh 的客户端， Ubuntu 14.04 默认安装了 ssh 客户端的，Mac OS也是默认安装了 ssh 客户端。</p>
 
 <p>下面以Mac OS（机器 B）为例通过 ssh 远程到 Ubuntu（机器 A）</p>
 
-<p>Mac OS 上打开终端或者是 iTerm， 输入“ssh chenglong@192.168.1.102”--> 回车，
+<p>Mac OS 上打开终端或者是 iTerm， 输入“ssh chenglong@192.168.1.102”–&gt; 回车，
 其中 ssh 连接的格式是 ssh user@ip，以上的命令 “chenglong” 是 Ubuntu（机器 A）上的一个用户， “192.168.1.102” 是 Ubuntu （机器 A）的 IP 地址。
 回车后，要求我们输入密码，这个密码是机器 A 上user（即“chenglong”）对应的登陆密码。
 之后便会链接成功。
 <img src="/public/img/ubuntu-3.png" alt="" /></p>
 
-<h4>连接错误</h4>
-
+<h4 id="连接错误">连接错误</h4>
 <p>之上登陆后，因为我们是通过“用户名和 IP 地址”来建立的 ssh 连接，所以在Mac OS（机器 B）上写入了一个 RSA 值，所以如果 Ubuntu （机器 A）重装系统，在根据“用户名和 IP 地址”来 ssh 登录的时候，如果‘机器 A’的 IP 地址不变的话，会出现错误。原因是重装系统后‘机器 A’ 会重新生成一个 RSA，那么‘机器 B’上记录的还是 IP 和原有的 RSA 的对应关系。所以此时最简单的解决方法就是在‘机器 B’上删除原有的那条信息就 OK 了。
 Mac OS上盖条信息存在 用户住目录下</p>
-
-<blockquote><p>~/.ssh/known_hosts</p></blockquote>
+<blockquote>
+  <p>~/.ssh/known_hosts</p>
+</blockquote>
 
 <p><img src="/public/img/ubuntu-4.png" alt="" />
 <img src="/public/img/ubuntu-5.png" alt="" /></p>
 
 <p>通过 ip 查找到该条记录删除之，即可。然后 ssh 重新连接。</p>
 
-<p>如果是多个人连接‘机器 A’，还可以通过配置 RSA 来使用 ssh 远程连接，这样的话就不需要每次使用 ssh 远程的时候输入‘机器 A’上的用户密码了。这需要将‘机器 B’、‘机器 C’、‘机器 D’...上的 RSA 都保存在‘机器 A’上，具体配置请 Google 之。</p>
+<p>如果是多个人连接‘机器 A’，还可以通过配置 RSA 来使用 ssh 远程连接，这样的话就不需要每次使用 ssh 远程的时候输入‘机器 A’上的用户密码了。这需要将‘机器 B’、‘机器 C’、‘机器 D’…上的 RSA 都保存在‘机器 A’上，具体配置请 Google 之。</p>
 
   </div>
 </div>
@@ -170,27 +163,27 @@ Mac OS上盖条信息存在 用户住目录下</p>
     
       <li>
         <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2017/01/10/Mac-%E5%B9%B3%E5%8F%B0%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7-%E8%BD%AF%E4%BB%B6/">
+            Mac 平台常用的一些工具、软件
+            <small>10 Jan 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2017/01/09/2016%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%BB%E7%BB%93/">
+            2016的一些总结
+            <small>09 Jan 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2016/09/25/%E5%BC%82%E6%AC%A1%E5%85%83%E6%9D%80%E9%98%B5%E4%B9%8B%E6%9C%80%E5%A4%A7%E5%AD%90%E6%AE%B5%E5%92%8C%E7%9A%84%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95/">
             异次元杀阵之最大子段和的破解之法
             <small>25 Sep 2016</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2016/06/05/GET%E5%92%8CPOST%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB-%E5%8F%8A%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BD%91%E4%B8%8A%E7%9A%84%E5%A4%9A%E6%95%B0%E7%AD%94%E6%A1%88%E9%83%BD%E6%98%AF%E9%94%99%E7%9A%84/">
-            GET和POST有什么区别？及为什么网上的多数答案都是错的。
-            <small>05 Jun 2016</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2015/05/04/Margin%E6%8A%98%E5%8F%A0-%E7%AB%99%E5%9C%A8%E8%AE%BE%E8%AE%A1%E8%80%85%E7%9A%84%E8%A7%92%E5%BA%A6%E6%80%9D%E8%80%83/">
-            Margin折叠，站在设计者的角度思考
-            <small>04 May 2015</small>
           </a>
         </h3>
       </li>
@@ -245,7 +238,7 @@ Mac OS上盖条信息存在 用户住目录下</p>
 
     <label for="sidebar-checkbox" class="sidebar-toggle"></label>
     <div class="footer">
-  <p>  Copyright © 2016 - <a href="/">fri3nds</a> - Powered by
+  <p>  Copyright © 2017 - <a href="/">fri3nds</a> - Powered by
     <a href="http://jekyllrb.com/">Jekyll</a>.
     <a href="http://github.com/">Github</a>
   </p>
