@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      webpack 源码分析 &middot; fri3nds
+    
+  </title>
+
+  <!-- CSS -->
+  <!-- <link rel="stylesheet" href="/public/css/syntax.css"> -->
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/pygments.css">
+  <link rel="stylesheet" href="/public/css/font-awesome.min.css">
+  <!-- <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400"> -->
+
+  <!-- Icons -->
+  <!-- <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/img/apple-touch-icon-144-precomposed.png"> -->
+  <link rel="shortcut icon" href="/public/img/chenglong.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- livereload test -->
+  <!--<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>-->
+
+  <!-- audioplayer -->
+  <script src="/public/js/jquery-1.11.1.js"></script>
+  <script src="/public/js/audioplayer/amazingaudioplayer.js"></script>
+  <link rel="stylesheet" type="text/css" href="/public/css/audioplayer/initaudioplayer-1.css">
+  <script src="/public/js/audioplayer/initaudioplayer-1.js"></script>
+
+</head>
+
+
+  <body class="">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-logo">
+      <a href="/"><img src="/public/img/chenglong.jpg"></a>
+    </div>
+    <p>Here is my personal weblog about technology and life.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/"><i class="fa fa-home fa-fw"></i>&nbsp 主页·&nbspHome</a>
+    <a class="sidebar-nav-item" href="/archive/"><i class="fa fa-file-text-o fa-fw"></i>&nbsp 归档·&nbspArchive</a>
+    <a class="sidebar-nav-item" href="/category/"><i class="fa fa-book fa-fw"></i>&nbsp 分类·&nbspCategory</a>
+    <a class="sidebar-nav-item" href="/tag/"><i class="fa fa-tags fa-fw"></i>&nbsp 标签·&nbspTag</a>
+    <a class="sidebar-nav-item" href="/about/"><i class="fa fa-hand-o-right fa-fw"></i>&nbsp 关于·&nbspAbout</a>
+    <!-- <span class="sidebar-nav-item"><i class="fa fa-info-circle">&nbsp&nbsp  </i>Currently v1.0.0</span> -->
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2018. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <div class="masthead-title">
+            <a href="/" title="Home">fri3nds</a>
+            <small>A craftsman typing carefully</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="container content">
+        <h2 class="post-name">Blog</h2>
+<div class="post">
+  <div class="post-heading inside">
+    <img src="/public/img/chenglong.jpg">
+    <h1 class="post-title">
+      <a class="post-title-blog" href="">
+        webpack 源码分析
+      </a>
+    </h1>
+      <p class="post-info">
+        
+          fri3nds 原创
+        
+      </p>
+      <span class="post-info"><i class="fa fa-calendar"></i>&nbsp2018/06/17  </span>
+      <span class="post-info"><i class="fa fa-book"></i>&nbsp<a href="/category/index.html#技术博文">技术博文</a></span>
+      <span class="post-info"><i class="fa fa-tags"></i>&nbsp<a href="/tag/index.html#javascript">javascript</a></span>
+      <span class="post-info">&nbsp<a href="/tag/index.html#"></a></span>
+      <span class="post-info">&nbsp<a href="/tag/index.html#"></a></span>
+  </div>
+  <div class="post-content">
+    <h1 id="webpack-源码分析">webpack 源码分析</h1>
+<p><img src="/public/img/webpack-logo.svg" alt="webpack-logo" /></p>
+
+<p>webpack 是一个现代 JavaScript 应用程序的静态模块打包器(module bundler)</p>
+
+<h2 id="概念">概念</h2>
+
+<p>webpack 是一个高度可配置的，想要驾驭它你必须首先理解其 4 个核心概念：</p>
+<ul>
+  <li>入口 enry</li>
+  <li>输出 output</li>
+  <li>loader</li>
+  <li>插件 plugins</li>
+</ul>
+
+<p><img src="/public/img/1527947274105.jpg" alt="1527947274105" /></p>
+
+<p>上图是 webpack 配置文件的一个🌰</p>
+
+<p>除此之外还有 <code class="highlighter-rouge">模式</code> 这个概念，主要是 webpack 根据不同模式开启相应的内置的优化。</p>
+
+<p>注意：新版文档加入 Browser Compatibility</p>
+
+<blockquote>
+  <p>webpack supports all browsers that are <a href="https://kangax.github.io/compat-table/es5/">ES5-compliant</a> (IE8 and below are not supported). webpack needs <code class="highlighter-rouge">Promise</code> for <code class="highlighter-rouge">import()</code> and <code class="highlighter-rouge">require.ensure()</code>. If you want to support older browsers, you will need to <a href="https://webpack.js.org/guides/shimming/">load a polyfill</a> before using these expressions.</p>
+</blockquote>
+
+<h2 id="机制">机制</h2>
+
+<p>本文的分析是基于 webpack 3.11.0 了，新的版本支持了一些新的特性，不在讨论范围。</p>
+
+<p><img src="/public/img/webpack-flow.jpg" alt="webpack-flow" /></p>
+
+<p><img src="/public/img/bin-webpack.jpg" alt="bin-webpack" /></p>
+
+<p>上述的源码截图可以清晰地看到执行 <code class="highlighter-rouge">webpack</code> 命令时会做什么处理，主要是解析命令行参数以及执行打包，其中 <code class="highlighter-rouge">processOptions</code> 就是 <code class="highlighter-rouge">/bin/webpack.js</code> 的核心函数。</p>
+
+<p><img src="/public/img/options.jpg" alt="options" /></p>
+
+<p>解析出来的 options 参数</p>
+
+<p><img src="/public/img/processOptions.jpg" alt="processOptions" /></p>
+
+<p><img src="/public/img/lib-webpack.jpg" alt="lib-webpack" /></p>
+
+<p>上述 webpack 函数里，有两点需要注意下：</p>
+<ul>
+  <li>
+    <p>Compiler，Compiler 类继承 Tapable，这个 Tapable 是一个插件框架，通过继承它的一系列方法来实现注册和调用插件，我们可以看到在 webpack 的源码中，存在大量的 compiler.apply、compiler.applyPlugins、compiler.plugin 等Tapable方法的调用。Webpack 的 plugin 注册和调用方式，都是源自 Tapable 。Webpack 通过 plugin 的 apply 方法安装该 plugin，同时传入一个 webpack 编译对象（Webpack compiler object）。</p>
+
+    <p><img src="/public/img/compiler.jpg" alt="compiler" /></p>
+  </li>
+  <li>
+    <p>compiler.options = new WebpackOptionsApply().process(options, compiler)
+这个方法将会针对我们传进去的 <code class="highlighter-rouge">compiler</code> 进行一些操作，那么干了什么呢</p>
+
+    <p><img src="/public/img/WebpackOptionsApply.jpg" alt="WebpackOptionsApply" /></p>
+
+    <p>写了很多代码，总结下来就干了 3 件事情</p>
+
+    <ul class="task-list">
+      <li class="task-list-item">
+        <p><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />把 <code class="highlighter-rouge">options</code> 上的配置信息复制到 <code class="highlighter-rouge">compiler</code> 上</p>
+      </li>
+      <li class="task-list-item">
+        <p><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />支持了一下不同 target(<del>有本事，你支持 React Native 环境啊</del>)，并注册了不同 target 的内置插件</p>
+      </li>
+      <li class="task-list-item">
+        <p><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />注册了大量内置插件</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="编译与主流程">编译与主流程</h2>
+<p>webpack 的实际入口是 Compiler 中的 run 方法，run 一旦执行后，就开始了编译和构建流程 ，其中有几个比较关键的 webpack 事件节点。具体的事件节点，webpack 提供了详细的 <a href="https://webpack.js.org/api/compiler-hooks/">hooks</a></p>
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">entry-option</code> 初始化 option</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">run</code> 开始执行</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">compile</code> 开始编译</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">make</code> 从入口点分析模块及其依赖的模块，创建这些模块对象</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">before-resolve</code> 触发 <code class="highlighter-rouge">factory</code> 事件</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">factory</code> 触发 <code class="highlighter-rouge">resolver</code> 事件</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">build-resolve</code> <code class="highlighter-rouge">after-resolve</code> 对其中一个模块位置进行解析</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">build-module</code> 开始构建(build)这个 module，这里将使用文件对应的 loader 加载</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">after-compile</code> 完成构建</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">seal</code> 封装构建结果</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">emit</code> 把各个 chunk 输出到结果文件</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">after-emit</code> 完成输出</p>
+
+    <p><img src="/public/img/webpack-runtime.png" alt="webpack-runtime" /></p>
+  </li>
+</ul>
+
+<h3 id="1-run">1. run</h3>
+<p><img src="/public/img/before-run-and-run.jpg" alt="before-run-and-run" />
+执行了 before-run 和 run 之后，开始调用 compiler.compile 方法</p>
+
+<h3 id="2-compile">2. compile</h3>
+<p><img src="/public/img/compile.jpg" alt="compile" /></p>
+
+<p>调用 compiler.compile 方法，首先触发 <code class="highlighter-rouge">before-compile</code> 然后触发 <code class="highlighter-rouge">compile</code> 事件，然后构建 compilation 实例</p>
+
+<p><img src="/public/img/compilation.png" alt="compilation" /></p>
+
+<p>这个对象有两个作用，一是负责组织整个打包过程，包含了每个构建环节及输出环节所对应的方法，可以从图中看到比较关键的步骤，如 <code class="highlighter-rouge">addEntry()</code>, <code class="highlighter-rouge">_addModuleChain()</code>, <code class="highlighter-rouge">buildModule()</code>, <code class="highlighter-rouge">seal()</code>, <code class="highlighter-rouge">createChunkAssets()</code> (在每一个节点都会触发 webpack 事件去调用各插件)。二是该对象内部存放着所有 module ，chunk，生成的 asset 以及用来生成最后打包文件的 template 的信息。</p>
+
+<p><img src="/public/img/newCompilation.jpg" alt="newCompilation" />
+上图可以看到初始化 compilation 的过程中，还触发了 <code class="highlighter-rouge">this-compilation</code> 和 <code class="highlighter-rouge">compilation</code> 两个事件</p>
+
+<p>this-compilation 事件触发 <code class="highlighter-rouge">CommonsChunkPlugin</code> 插件，在这个时候执行了，往 <code class="highlighter-rouge">compilation</code> 上注册了 <code class="highlighter-rouge">optimize-chunks</code> 和 <code class="highlighter-rouge">optimize-extracted-chunks</code> 两个事件
+还触发了 <code class="highlighter-rouge">extract-text-webpack-plugin</code> 插件，其在执行的时候，往 <code class="highlighter-rouge">compilation</code> 上注册了 <code class="highlighter-rouge">normal-module-loader</code> 事件。</p>
+
+<p>compilation 事件就更厉害了，触发了一堆插件。</p>
+
+<h3 id="3-make">3. make</h3>
+
+<p>在初始化 compilation 后，就开始了 <code class="highlighter-rouge">make</code> 的阶段。</p>
+
+<p><img src="/public/img/MultiEntryPlugin.jpg" alt="MultiEntryPlugin" /></p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MultiEntryDependency.js</span>
+<span class="kd">const</span> <span class="nx">Dependency</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"../Dependency"</span><span class="p">);</span>
+
+<span class="kd">class</span> <span class="nx">MultiEntryDependency</span> <span class="kd">extends</span> <span class="nx">Dependency</span> <span class="p">{</span>
+	<span class="kd">constructor</span><span class="p">(</span><span class="nx">dependencies</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">super</span><span class="p">();</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">dependencies</span> <span class="o">=</span> <span class="nx">dependencies</span><span class="p">;</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="kd">get</span> <span class="nx">type</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="s2">"multi entry"</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">MultiEntryDependency</span><span class="p">;</span>
+
+
+<span class="c1">// SingleEntryDependency.js</span>
+<span class="kd">const</span> <span class="nx">ModuleDependency</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"./ModuleDependency"</span><span class="p">);</span>
+
+<span class="kd">class</span> <span class="nx">SingleEntryDependency</span> <span class="kd">extends</span> <span class="nx">ModuleDependency</span> <span class="p">{</span>
+	<span class="kd">constructor</span><span class="p">(</span><span class="nx">request</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">super</span><span class="p">(</span><span class="nx">request</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="kd">get</span> <span class="nx">type</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="s2">"single entry"</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">SingleEntryDependency</span><span class="p">;</span>
+
+<span class="c1">// ModuleDependency.js</span>
+<span class="kd">const</span> <span class="nx">Dependency</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"../Dependency"</span><span class="p">);</span>
+
+<span class="kd">class</span> <span class="nx">ModuleDependency</span> <span class="kd">extends</span> <span class="nx">Dependency</span> <span class="p">{</span>
+	<span class="kd">constructor</span><span class="p">(</span><span class="nx">request</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">super</span><span class="p">();</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">request</span> <span class="o">=</span> <span class="nx">request</span><span class="p">;</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">userRequest</span> <span class="o">=</span> <span class="nx">request</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="nx">isEqualResource</span><span class="p">(</span><span class="nx">other</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">other</span> <span class="k">instanceof</span> <span class="nx">ModuleDependency</span><span class="p">))</span>
+			<span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+
+		<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">request</span> <span class="o">===</span> <span class="nx">other</span><span class="p">.</span><span class="nx">request</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">ModuleDependency</span><span class="p">;</span>
+</code></pre></div></div>
+<p>好像什么🐂逼的事情都没有干啊！
+初始化好 dependencies(dependencies 是一个 SingleEntryDependency 实例的array) 后，就开始了 compilationl.addEntry 方法。 在 addEntry 中调用私有方法 _addModuleChain。这个方法主要做了两件事情，一是根据模块的类型获取对应的模块工厂并创建模块，二是构建模块。</p>
+
+<p><img src="/public/img/addModuleChain.jpg" alt="addModuleChain" /></p>
+
+<p>在之前触发 compilation 后，很多插件往 compilation.dependencyFactories 这个 Set 塞了很多模块工厂。</p>
+
+<p>取出对应的模块工厂，调用其静态方法 create, 初始化 Module 实例。</p>
+
+<p><img src="/public/img/MultiModule.jpg" alt="MultiModule" /></p>
+
+<p>然后调用了 compilation.addModule 方法，将 module 存储在 compilation.modules 这个数组里，并返回 true 表示添加成功。</p>
+
+<p>之前 MultiEntryPlugin.createDependency 根据 entry 创建了 MultiEntryDependency 实例。</p>
+
+<p><img src="/public/img/addEntry.jpg" alt="addEntry" /></p>
+
+<p>将 module 绑定到 entry 上，又将 module 存储到了 compilation.entries 数组里。</p>
+
+<p>buildModule 函数内部，触发<code class="highlighter-rouge">build-module</code> 事件，调用 module.build 方法。就是简单地将 module.built 置为 true，最后调用 compilation 里面的 moduleReady 方法，进而调用 compilation.processModuleDependencies 方法。</p>
+
+<p>中间从 module.dependences 递归拿到 SingleEntryDependency 对应的 factory，其中触发 <code class="highlighter-rouge">build-resolve</code> 事件，factory 最后调用了 enhanced-resolve 提供的 <code class="highlighter-rouge">Resolver</code> 实例的 doResolve 方法。</p>
+
+<p><code class="highlighter-rouge">create-module</code> 最后调用了 NormalModule, NormalModule createLoaderContext 创建 loader 上下文，最后会去调用 LoaderRunner 的 runLoaders, runLoaders 的回调完成了 sourceMap 的一些功能，最后执行了 doBuild(NormalModule 的实例方法) 传入的回调即 this.parser.parse(this 也是 NormalModule 的实例)</p>
+
+<p><img src="/public/img/NormalModule-build.jpg" alt="NormalModule-build" /></p>
+
+<p><img src="/public/img/Parser.jpg" alt="Parser" /></p>
+
+<p>parser 的 parse 方法就是调用 <a href="https://github.com/ternjs/acorn">acorn</a> 解析经 loader 处理后的源文件生成抽象语法树 AST，然后触发了 program 事件</p>
+
+<p><img src="/public/img/Parser-state.jpg" alt="Parser-state" /></p>
+
+<p>最后返回的 state 的数据如图。</p>
+
+<p>递归解析完entry后，最后会调用 compilation.seal 方法。</p>
+
+<p><img src="/public/img/Compilation-seal.jpg" alt="Compilation-seal" /></p>
+
+<p>中间的很多事件触发后，调用了 compilation.createModuleAssets 方法进行打包后代码的生成。
+(未完待续…)</p>
+
+<h2 id="webpack-中的一些概念">webpack 中的一些概念</h2>
+
+<p>webpack 满足其高度自定义的可能性，也带来了配置的复杂性，已经可以<a href="http://webpack.wuhaolin.cn/">著书立传</a></p>
+<ol>
+  <li><code class="highlighter-rouge">module</code> 一个文件，可以看成一个 module</li>
+  <li><code class="highlighter-rouge">chunk</code> code splitting 后的产物，也就是按需加载的分块，装载了不同的 module</li>
+  <li><code class="highlighter-rouge">filename</code> output 配置下的一个选项，每一个 bundle 的命名模板</li>
+  <li><code class="highlighter-rouge">chunkFileName</code> 可以参考 <a href="https://segmentfault.com/q/1010000003850413?_ea=769657">我的回答</a></li>
+</ol>
+
+<p>对于 module 和 chunk 的关系可以参照 webpack 官方的这张图</p>
+
+<p><img src="/public/img/module-vs-chunk.jpg" alt="module-vs-chunk" /></p>
+
+<p>webpack 的作者也回答了 <a href="https://github.com/webpack/webpack.js.org/issues/970">Concepts - Bundle vs Chunk</a>  这个问题</p>
+
+<blockquote>
+  <p>A chunk is a bundle.
+Yes a chunk is a bundle. Chunk the class is the encapsulation for parts of your dependency graph.
+There are three classifications of Chunks:</p>
+  <ul>
+    <li><code class="highlighter-rouge">Entry chunk</code>: An entry chunk is an emitted file which contains the webpack runtime code. To be classified as an entry chunk, the emitted JS bundle/file must contain that bootstrap code seen above. Sometimes there will be no modules and they can be isolated into separate files. The entry chunk must always be executed first.</li>
+    <li><code class="highlighter-rouge">Initial chunk</code>: An initial chunk is loaded synchronously however doesn’t contain the runtime code.</li>
+    <li><code class="highlighter-rouge">Normal chunk</code>: The only thing that separates an initial chunk from a normal chunk is how the file is loaded. Normal chunks are always lazy loaded and asynchronous. For example when I use require.ensure, or System.import or import(), webpack will separate any of the modules into a separate normal chunk.</li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>Is it always one chunk for output file?
+The only case where it is not, is when there are for example sourcemaps that are emitted alongside. These multiple assets that are written to disk are known as chunk assets.</p>
+</blockquote>
+
+<h2 id="注册插件">注册插件</h2>
+
+<p><img src="/public/img/NodeEnvironmentPlugin.jpg" alt="NodeEnvironmentPlugin" /></p>
+
+<p><code class="highlighter-rouge">NodeEnvironmentPlugin</code> 插件类必须有 <code class="highlighter-rouge">apply</code> 实例方法，可以拿到 webpack 整个 <code class="highlighter-rouge">compiler</code> 实例，</p>
+
+<p><img src="/public/img/other-plugins.jpeg" alt="other-plugins" /></p>
+
+<p>上图中的都是解析 webpack.config 文件得到的 options 的 plugins</p>
+
+<p><img src="/public/img/Tapable.jpg" alt="Tapable" /></p>
+
+<p>插件通过 <code class="highlighter-rouge">apply</code> 方法，拿到 <code class="highlighter-rouge">compiler</code> 实例，在 <code class="highlighter-rouge">apply</code> 方法内，通过 <code class="highlighter-rouge">compiler.plugin</code> 方法，来注册插件。
+如何编写一个 webpack 的插件可以参考 <a href="https://webpack.js.org/contribute/writing-a-plugin/">how to witre a plugin</a></p>
+
+<h2 id="webpack-中的一些-tapable-实例">webpack 中的一些 Tapable 实例</h2>
+<ul>
+  <li>Compiler</li>
+  <li>Compilation</li>
+  <li>Resolver</li>
+  <li>NormalModuleFactory</li>
+  <li>ContextModuleFactory</li>
+  <li>Template</li>
+  <li>Template Subclass - MainTemplate/ChunkTemplate/ModuleTemplate/DependencyTemplate</li>
+  <li>Parser</li>
+</ul>
+
+<p>(具体的详细解释可以查看<a href="https://medium.com/webpack/the-contributors-guide-to-webpack-part-2-9fd5e658e08c">文章</a>)</p>
+
+<h2 id="webpack-的一些优化">webpack 的一些优化</h2>
+<ul>
+  <li>scope hoisting(作用域提升)
+new webpack.optimize.ModuleConcatenationPlugin()
+https://github.com/webpack/webpack/tree/master/examples/scope-hoisting</li>
+</ul>
+
+<p>直观感受就是——函数声明少了很多，因此而带来的好处有：</p>
+
+<ol>
+  <li>文件体积比之前更小。</li>
+  <li>运行代码时创建的函数作用域也比之前少了，开销也随之变小。</li>
+</ol>
+
+<p>项目中的模块越多，上述的两点提升就会越明显。</p>
+
+<ul>
+  <li>
+    <p>pure module
+https://github.com/webpack/webpack/tree/feature/pure-module/examples/pure-module</p>
+  </li>
+  <li>
+    <p>tree shaking
+https://webpack.js.org/guides/tree-shaking/</p>
+  </li>
+</ul>
+
+<p>tree shaking 的尴尬是</p>
+<ol>
+  <li>cmd 不行</li>
+  <li>es6 有了 import 动态引入依赖</li>
+  <li>有些库会将最终的输出元素用Object.freeze方法包裹起来, 引入了副作用</li>
+</ol>
+
+<ul>
+  <li>split Chunk
+    <ol>
+      <li>DllPlugin和CommonsChunkPlugin（splitChunks）可以共存吗？</li>
+      <li>许多人在使用CommonsChunkPlugin的时候并没有注意到Webpack会将runtime一起打包进vendors文件，所以每次启动的时候，尽管你并没有修改任何第三方依赖，但是vendors文件的hash值却变了，导致浏览器缓存实际上并没有被利用起来。要解决这个问题，需要配置CommonsChunkPlugin将runtime单独打包成一个文件。</li>
+    </ol>
+  </li>
+</ul>
+
+<p>https://zhuanlan.zhihu.com/p/35407642</p>
+
+<p>webpack 4 的一些新东西
+http://zcfy.baomitu.com/article/webpack-4-changes-part-1-week-24-25-webpack-medium-4303.html</p>
+
+<p>webpack 4 采坑小白鼠
+https://zhuanlan.zhihu.com/p/37896189</p>
+
+<p>我的推荐
+thread-loader
+webpack-stylish</p>
+
+<h2 id="tapable">Tapable</h2>
+<p>必须吐槽一下，Tapable 的方法命名简直就是垃圾，下面讲一下</p>
+
+<p><code class="highlighter-rouge">apply</code> <code class="highlighter-rouge">applyPlugins</code> <code class="highlighter-rouge">plugin</code> <code class="highlighter-rouge">applyPluginsBailResult</code> <code class="highlighter-rouge">applyPluginsAsync</code> 的区别</p>
+
+<ol>
+  <li>
+    <p>apply</p>
+
+    <p>注册插件</p>
+  </li>
+  <li>
+    <p>plugin</p>
+
+    <p>监听事件，并添加事件回调</p>
+  </li>
+  <li>
+    <p>applyPlugins</p>
+
+    <p>触发事件，通知插件</p>
+  </li>
+  <li>
+    <p>applyPluginsBailResult</p>
+
+    <p>触发事件，通知插件，且插件的回调必须有返回值</p>
+  </li>
+  <li>
+    <p>applyPluginsAsync applyPluginsAsyncSeries</p>
+
+    <p>注册回调，触发事件，通知插件</p>
+  </li>
+  <li>
+    <p>applyPluginsBailResult
+触发事件，并拿到监听事件的回调的执行结果</p>
+  </li>
+</ol>
+
+<h2 id="参考文档">参考文档</h2>
+
+<p>webpack 核心开发者写的高级老司机指南: <a href="https://medium.com/webpack/contributors-guide/home">https://medium.com/webpack/contributors-guide/home</a></p>
+
+<p>命令行输入webpack的时候都发生了什么: <a href="https://github.com/DDFE/DDFE-blog/issues/12">https://github.com/DDFE/DDFE-blog/issues/12</a></p>
+
+<p>细说 webpack 之流程篇: <a href="http://taobaofed.org/blog/2016/09/09/webpack-flow/">http://taobaofed.org/blog/2016/09/09/webpack-flow/</a></p>
+
+<p>webpack 源码解析: <a href="https://lihuanghe.github.io/2016/05/30/webpack-source-analyse.html">https://lihuanghe.github.io/2016/05/30/webpack-source-analyse.html</a></p>
+
+<p>Tapable 和 事件流: <a href="https://segmentfault.com/a/1190000008060440">https://segmentfault.com/a/1190000008060440</a></p>
+
+<p>webpack 主要对象: <a href="https://segmentfault.com/a/1190000008060484">https://segmentfault.com/a/1190000008060484</a></p>
+
+<p>如何实现一个简单的webpack: <a href="https://github.com/youngwind/blog/issues/99">https://github.com/youngwind/blog/issues/99</a></p>
+
+<p>webpack 详细的构建过程: <a href="https://github.com/liangklfangl/webpack-compiler-and-compilation">https://github.com/liangklfangl/webpack-compiler-and-compilation</a></p>
+
+  </div>
+</div>
+
+<!-- <div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2017/01/14/2016-Mac-%E5%B9%B3%E5%8F%B0%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7-%E8%BD%AF%E4%BB%B6/">
+            Mac 平台常用的一些工具、软件
+            <small>14 Jan 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2017/01/09/2016%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%BB%E7%BB%93/">
+            2016的一些总结
+            <small>09 Jan 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2016/09/25/%E5%BC%82%E6%AC%A1%E5%85%83%E6%9D%80%E9%98%B5%E4%B9%8B%E6%9C%80%E5%A4%A7%E5%AD%90%E6%AE%B5%E5%92%8C%E7%9A%84%E7%A0%B4%E8%A7%A3%E4%B9%8B%E6%B3%95/">
+            异次元杀阵之最大子段和的破解之法
+            <small>25 Sep 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div> -->
+
+
+<div class="sub_pagination">
+
+  
+    <a class="sub_pagination-item" id="lastest">已经是最新一篇&nbsp<i class="fa fa-unlink"></i></a>
+  
+  
+    <a class="sub_pagination-item newer" href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2017/01/14/2016-Mac-%E5%B9%B3%E5%8F%B0%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7-%E8%BD%AF%E4%BB%B6/">Mac 平台常用的一些工具、软件&nbsp<i class="fa fa-share"></i></a>
+  
+</div>
+
+
+<!-- <div class="comments"> -->
+<h2>Comments</h2>
+
+
+
+<!-- Duoshuo Comment BEGIN -->
+<div id="comment">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-title="webpack 源码分析"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {
+        short_name: "chengzihan"
+    };
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        // ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.src = '../../../../../public/js/duoshuo.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+<!-- Duoshuo Comment END -->
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+    <div class="footer">
+  <p>  Copyright © 2018 - <a href="/">fri3nds</a> - Powered by
+    <a href="http://jekyllrb.com/">Jekyll</a>.
+    <a href="http://github.com/">Github</a>
+  </p>
+  <ul>
+    <!-- <li><a href="/"><i class="fa fa-twitter fa-2x"></i></a></li> -->
+    <li><a href="https://github.com/xiaoDC"><i class="fa fa-github fa-2x"></i></a></li>
+    <!-- <li><a href="https://www.linkedin.com/nhome/?trk="><i class="fa fa-linkedin fa-2x"></i></a></li> -->
+  </ul>
+</div>
+
+
+    <!-- "The ending isn’t any more important than the moments leading to it." -Dr. Eva Rosalene, To The Moon -->
+  </body>
+</html>
+

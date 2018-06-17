@@ -66,7 +66,7 @@
 
   <div class="sidebar-item">
     <p>
-      &copy; 2017. All rights reserved.
+      &copy; 2018. All rights reserved.
     </p>
   </div>
 </div>
@@ -119,9 +119,8 @@
 <p>最容易想到的方法就是枚举，所以的情况都枚举出来，比较一下大小就可以了。</p>
 
 <p>以数组</p>
-<div class="highlighter-rouge"><pre class="highlight"><code> A = [-2, 11, -4, 13, -5, -2]
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> A = [-2, 11, -4, 13, -5, -2]
+</code></pre></div></div>
 <p>为例。</p>
 
 <p>关于如何枚举，我个人容易想到的是2种；</p>
@@ -131,7 +130,7 @@
 
 <p>解法1</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>var A = [-2, 11, -4, 13, -5, -2];
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var A = [-2, 11, -4, 13, -5, -2];
 var ans = A[0];
 var s;
 
@@ -148,11 +147,10 @@ for(var n = 1; n &lt;= A.length; n++) {
 }
 
 console.log(ans, '=========');
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>解法2</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>var A = [-2, 11, -4, 13, -5, -2];
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var A = [-2, 11, -4, 13, -5, -2];
 var ans = A[0];
 var s;
 
@@ -169,8 +167,7 @@ for(var i = 0; i &lt; A.length; i++) {
 }
 
 console.log(ans, '=========');
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>两中方法其实都是通过记录起始点的手段来来解决问题，也就是记录<code class="highlighter-rouge">坐标</code>，有点像《心慌方》中理科女，通过坐标来辨识安全的房间.
 (在更新 ans 的时候，可以记录相应的起始点，就得到我们想要的<code class="highlighter-rouge">坐标</code>了)</p>
@@ -194,7 +191,7 @@ console.log(ans, '=========');
 <p>如果用 sum[i] 表示 A 中 A[0] 到 A[i] 的累加和，那么 A[i..j] = sum[j] - sum[i-1];
 我们在外层计算出数组 sum，记录下来，在需要用到 A[i…j] 的时候，通过简单的减法运算就可以实现了，减少了一层循环，时间复杂度就降低到 <code class="highlighter-rouge">O(n^2)</code></p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 var A = [-2, 11, -4, 13, -5, -2];
 var sum = [];
 sum[0] = A[0];
@@ -215,8 +212,7 @@ for(i = 1; i &lt; A.length; i++) {
 
 console.log(ans, '=========');
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="4-降-量">4. 降 “量”</h3>
 <p>尝试了第一种优化方式，确实得到了一些优化，那继续尝试第二种咯。</p>
@@ -257,7 +253,7 @@ console.log(ans, '=========');
 
 <p>具体解法</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>var A = [-2, 11, -4, 13, -5, -2];
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var A = [-2, 11, -4, 13, -5, -2];
 function MaxSubSequence(left, right) {
   if (left &gt; right) {
     return 0;
@@ -296,8 +292,7 @@ function MaxSubSequence(left, right) {
 var ans = MaxSubSequence(0, A.length - 1);
 console.log(ans, '===============');
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>整个解法的时间复杂度是 <code class="highlighter-rouge">O(n*lgn)</code></p>
 
@@ -341,7 +336,7 @@ tmp 记录 A[m+1] 到 A[j-1] 的累积和</p>
 
 <p>具体解法</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>var A = [-2, 11, -4, 13, -5, -2];
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var A = [-2, 11, -4, 13, -5, -2];
 var ans = 0;
 var tmp = 0; // 记录 A[m+1] + A[m+2] + ... + A[j-1]
 
@@ -358,8 +353,7 @@ for(var j = 0; j &lt; A.length; j++) {
 
 console.log(ans, '=========');
 
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>该解法的时间复杂度为 <code class="highlighter-rouge">O(n)</code></p>
 
 <h3 id="6-降维">6. 降维</h3>
@@ -381,6 +375,15 @@ console.log(ans, '=========');
     
       <li>
         <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2018/06/17/webpack-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">
+            webpack 源码分析
+            <small>17 Jun 2018</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2017/01/14/2016-Mac-%E5%B9%B3%E5%8F%B0%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7-%E8%BD%AF%E4%BB%B6/">
             Mac 平台常用的一些工具、软件
             <small>14 Jan 2017</small>
@@ -393,15 +396,6 @@ console.log(ans, '=========');
           <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2017/01/09/2016%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%BB%E7%BB%93/">
             2016的一些总结
             <small>09 Jan 2017</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2016/06/05/GET%E5%92%8CPOST%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB-%E5%8F%8A%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BD%91%E4%B8%8A%E7%9A%84%E5%A4%9A%E6%95%B0%E7%AD%94%E6%A1%88%E9%83%BD%E6%98%AF%E9%94%99%E7%9A%84/">
-            GET和POST有什么区别？及为什么网上的多数答案都是错的。
-            <small>05 Jun 2016</small>
           </a>
         </h3>
       </li>
@@ -456,7 +450,7 @@ console.log(ans, '=========');
 
     <label for="sidebar-checkbox" class="sidebar-toggle"></label>
     <div class="footer">
-  <p>  Copyright © 2017 - <a href="/">fri3nds</a> - Powered by
+  <p>  Copyright © 2018 - <a href="/">fri3nds</a> - Powered by
     <a href="http://jekyllrb.com/">Jekyll</a>.
     <a href="http://github.com/">Github</a>
   </p>
