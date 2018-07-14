@@ -87,7 +87,7 @@ class Monad m where
 ## Promise 和 Monad
 OK, 那 Monad js 中的 Promise 有什么关系呢？
 
-haskell 中 Monad 是用来隔离副作用的，Promise 在 js 中也是用来隔离副作用的，所以我们本能可以将二者联系起来。
+haskell 中 Monad 可以被用来隔离副作用，Promise 在 js 中主要也是用来处理异步的，隔离副作用的，所以我们本能可以将二者联系起来。
 
 把 Promise 理解成一个容器。
 1. `Promise.resolve(5)` 或者 `new Promise((resolve, reject) => resolve(6)` 是不是就是 Monad 里面的 return 方法
