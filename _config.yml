@@ -27,8 +27,15 @@ author:
 # Custom vars
 version:          1.0.0
 
+# github_comments
+github_comments:
+  repo: gituser/gitrepo
+  branch: master
+  comment_template: comments.html
+  comments_template: comments.html
+
 # duoshuo
-comments:
-  provider : duoshuo
-  duoshuo :
-    short_name : chengzihan
+# comments:
+#   provider : duoshuo
+#   duoshuo :
+#     short_name : chengzihan
