@@ -19,9 +19,9 @@ layout: default
       </p>
       <span class="post-info"><i class="fa fa-calendar"></i>&nbsp{{ page.date | date: "%Y" }}/{{ page.date | date: "%m" }}/{{ page.date | date: "%d" }}  </span>
       <span class="post-info"><i class="fa fa-book"></i>&nbsp<a href="/category/index.html#{{ page.categories }}">{{ page.categories }}</a></span>
-      <span class="post-info"><i class="fa fa-tags"></i>&nbsp<a href="/tag/index.html#{{ page.tags | first }}">{{ page.tags | first }}</a></span>
-      <span class="post-info">&nbsp<a href="/tag/index.html#{{ page.tags[1] }}">{{ page.tags[1] }}</a></span>
-      <span class="post-info">&nbsp<a href="/tag/index.html#{{ page.tags[2] }}">{{ page.tags[2] }}</a></span>
+      {% for tag in page.tags %}
+        <span class="post-info">&nbsp<a href="/tag/index.html#{{ tag }}">{{ tag }}</a></span>
+      {% endfor %}
   </div>
   <div class="post-content">
     {{ content }}
