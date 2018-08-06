@@ -26,11 +26,3 @@ author:
 
 # Custom vars
 version:          1.0.0
-
-# github_comments
-# gitment:
-#   enable: true
-#   owner: xiaoDC
-#   branch: xiaoDC.github.io
-#   comment_template: comments.html
-#   comments_template: comments.html

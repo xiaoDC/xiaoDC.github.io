@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      浅谈 Lazy &middot; fri3nds
+    
+  </title>
+
+  <!-- CSS -->
+  <!-- <link rel="stylesheet" href="/public/css/syntax.css"> -->
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/pygments.css">
+  <link rel="stylesheet" href="/public/css/font-awesome.min.css">
+  <!-- <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400"> -->
+
+  <!-- Icons -->
+  <!-- <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/img/apple-touch-icon-144-precomposed.png"> -->
+  <link rel="shortcut icon" href="/public/img/chenglong.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- livereload test -->
+  <!--<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>-->
+
+  <!-- audioplayer -->
+  <script src="/public/js/jquery-1.11.1.js"></script>
+  <script src="/public/js/audioplayer/amazingaudioplayer.js"></script>
+  <link rel="stylesheet" type="text/css" href="/public/css/audioplayer/initaudioplayer-1.css">
+  <script src="/public/js/audioplayer/initaudioplayer-1.js"></script>
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?32fe7477dc34484123ca3fe5001749c6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</head>
+
+
+  <body class="">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-logo">
+      <a href="/"><img src="/public/img/chenglong.jpg"></a>
+    </div>
+    <p>Here is my personal weblog about technology and life.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/"><i class="fa fa-home fa-fw"></i>&nbsp 主页·&nbspHome</a>
+    <a class="sidebar-nav-item" href="/archive/"><i class="fa fa-file-text-o fa-fw"></i>&nbsp 归档·&nbspArchive</a>
+    <a class="sidebar-nav-item" href="/category/"><i class="fa fa-book fa-fw"></i>&nbsp 分类·&nbspCategory</a>
+    <a class="sidebar-nav-item" href="/tag/"><i class="fa fa-tags fa-fw"></i>&nbsp 标签·&nbspTag</a>
+    <a class="sidebar-nav-item" href="/about/"><i class="fa fa-hand-o-right fa-fw"></i>&nbsp 关于·&nbspAbout</a>
+    <!-- <span class="sidebar-nav-item"><i class="fa fa-info-circle">&nbsp&nbsp  </i>Currently v1.0.0</span> -->
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2018. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <div class="masthead-title">
+            <a href="/" title="Home">fri3nds</a>
+            <small>A craftsman typing carefully</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="container content">
+        <h2 class="post-name">Blog</h2>
+<div class="post">
+  <div class="post-heading inside">
+    <img src="/public/img/chenglong.jpg">
+    <h1 class="post-title">
+      <a class="post-title-blog" href="">
+        浅谈 Lazy
+      </a>
+    </h1>
+      <p class="post-info">
+        
+          fri3nds 原创
+        
+      </p>
+      <span class="post-info"><i class="fa fa-calendar"></i>&nbsp2018/07/22  </span>
+      <span class="post-info"><i class="fa fa-book"></i>&nbsp<a href="/category/index.html#技术博文">技术博文</a></span>
+      
+        <span class="post-info">&nbsp<a href="/tag/index.html#javascript">javascript</a></span>
+      
+        <span class="post-info">&nbsp<a href="/tag/index.html#clojure">clojure</a></span>
+      
+        <span class="post-info">&nbsp<a href="/tag/index.html#function programming">function programming</a></span>
+      
+        <span class="post-info">&nbsp<a href="/tag/index.html#lazy">lazy</a></span>
+      
+        <span class="post-info">&nbsp<a href="/tag/index.html#observable">observable</a></span>
+      
+        <span class="post-info">&nbsp<a href="/tag/index.html#lodash">lodash</a></span>
+      
+  </div>
+  <div class="post-content">
+    <p>《功夫》里火云邪神有一句台词“天下武功，无坚不破，唯快不破！”</p>
+
+<p>李寻欢的飞刀很快，从来没有人看到他出手，因为看到的都已经变成了死人，他神乎其神的刀法，几乎成为传说。</p>
+
+<p>阿飞的剑也很快，出手从来不讲究什么技巧，就是极快的刺出去，很多高手都栽到他的剑下，就是因为低估了他出剑的速度。</p>
+
+<p>那天下武功真的唯快不破？</p>
+
+<p>我们来看看宇宙最权威的解答：
+<a href="https://www.zhihu.com/question/25826592/answer/49984233">天下武功真的唯快不破?</a></p>
+
+<p>其实有时候，恰恰相反。</p>
+
+<h1 id="1-lazy">1. Lazy</h1>
+
+<p>Lazy evaluation(惰性求值)</p>
+
+<p>在 <a href="https://en.wikipedia.org/wiki/Programming_language_theory">编程语言理论</a> 中，惰性求值，又译为惰性计算、懒惰求值，也称为传需求调用（call-by-need），是一个 <a href="https://en.wikipedia.org/wiki/Computer_programming">计算机编程</a> 中的一个概念，它的目的是要最小化计算机 要做的工作。它有两个相关而又有区别的含意，可以表示为“延迟求值”和“最小化求值”，本条目专注前者，后者请参见 <a href="(https://en.wikipedia.org/wiki/Short-circuit_evaluation)">最小化计算</a> 条目。除可以得到性能的提升外，惰性计算的最重要的好处是它可以构造一个无限的数据类型。</p>
+
+<blockquote>
+  <p>The benefits of lazy evaluation include:</p>
+  <ol>
+    <li>The ability to define control flow (structures) as abstractions instead of primitives.</li>
+    <li>The ability to define potentially infinite data structures. This allows for more straightforward implementation of some algorithms.</li>
+    <li>Performance increases by avoiding needless calculations, and error conditions in evaluating compound expressions.</li>
+  </ol>
+</blockquote>
+
+<ul>
+  <li>大部分的编程语言都是 <code class="highlighter-rouge">严格求值</code> 的，例如 Python、C、C++、Java 等。这些语言很多也都可以通过第三方库来实现 lazy。</li>
+  <li>Haskell 是默认支持 <code class="highlighter-rouge">lazy evaluation</code>, 是纯lazy，但其有自己的 <a href="https://www.zhihu.com/question/56027755/answer/147903434">策略</a>，得以兼顾了 strict evaluation 和 lazy evaluation。</li>
+  <li>再者是 Ocaml、Scheme、Clojure、Scala、C# 这种语言层面支持 lazy 的。</li>
+  <li>其次就是一些支持 fp 的语言，来实现 lazy 的。</li>
+</ul>
+
+<!-- C++ 可以通过重载运算符来实现 lazy; Python 可以通过 yield 来实现 lazy; -->
+
+<h1 id="2-javascript">2. JavaScript</h1>
+<p>js 支持 fp 的编程范式，就很容易实现 lazy，</p>
+
+<h2 id="21-lodash">2.1 Lodash</h2>
+<p><a href="https://lodash.com">lodash</a> 就用了 lazy 来优化性能；</p>
+
+<p>Strict evaluation, 如下图:
+<img src="/public/img/no_lazy.gif" alt="no-lazy" /></p>
+
+<p>Lazy evaluation, 如下图:
+<img src="/public/img/lodash_lazy.gif" alt="lazy" /></p>
+
+<p>简单的 <a href="https://jsperf.com/lazy-demo">benchmark</a></p>
+
+<p>通过一个例子看看 lodash 是如何实现 lazy 的</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'lodash'</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">tt</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">chain</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+  <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">x</span> <span class="o">=&gt;</span> <span class="nx">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">x</span> <span class="o">=&gt;</span> <span class="nx">x</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">value</span><span class="p">();</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">tt</span><span class="p">,</span> <span class="s1">'=============== tt '</span><span class="p">);</span> <span class="c1">// [ 3, 5, 7 ]</span>
+</code></pre></div></div>
+
+<p><img src="/public/img/lazy/chain.jpg" alt="chain" />
+返回的 result 是一个 <code class="highlighter-rouge">LodashWrapper</code> 的实例。紧接着调用 map 方法。</p>
+
+<p><img src="/public/img/lazy/map.jpg" alt="map" />
+其中 result 变成了一个 <code class="highlighter-rouge">LazyWrapper</code> 的实例，有转化成 <code class="highlighter-rouge">LodashWrapper</code> 实例。</p>
+
+<p>filter 和 take 方法调用和 map 方法大致相同。</p>
+
+<p>调用 take 方法时
+<img src="/public/img/lazy/take.jpg" alt="take" />
+<img src="/public/img/lazy/baseWrapperValue.jpg" alt="baseWrapperValue" />
+<img src="/public/img/lazy/lazyValue.jpg" alt="lazyValue" /></p>
+
+<p>两层 while 循环，求解过程就变成上面 Lazy evaluation 的过程了。</p>
+
+<h2 id="22-transducer">2.2 transducer</h2>
+
+<p>Rich Hickey，Clojure 的作者在 Clojure1.7 版本正式加入了 Transducer 的概念。</p>
+
+<p>Transduce 可以看成两个动词的组合，即 transform 和 reduce，而 transducer 就是两者的结合。</p>
+
+<p><a href="https://blog.oyanglul.us/javascript/clojure-essence-in-javascript-transducer">Transducer 详细解析</a></p>
+
+<div class="language-clojure highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="nb">reduce</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="n">odd?</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">inc</span><span class="w"> </span><span class="p">(</span><span class="nb">range</span><span class="w"> </span><span class="mi">100000000</span><span class="p">))))</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-clojure highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">xf</span><span class="w">
+  </span><span class="p">(</span><span class="nb">comp</span><span class="w">
+   </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">inc</span><span class="p">)</span><span class="w">
+   </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="n">odd?</span><span class="p">)))</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">transduce</span><span class="w"> </span><span class="n">xf</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="nb">range</span><span class="w"> </span><span class="mi">100000000</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<p>而 clojure 的源码也是很简单的</p>
+
+<div class="language-clojure highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">transduce</span><span class="w">
+  </span><span class="p">([</span><span class="n">xform</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">coll</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">transduce</span><span class="w"> </span><span class="n">xform</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="nf">f</span><span class="p">)</span><span class="w"> </span><span class="n">coll</span><span class="p">))</span><span class="w">
+  </span><span class="p">([</span><span class="n">xform</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">init</span><span class="w"> </span><span class="n">coll</span><span class="p">]</span><span class="w">
+     </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="nf">xform</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w">
+           </span><span class="n">ret</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">instance?</span><span class="w"> </span><span class="n">clojure.lang.IReduceInit</span><span class="w"> </span><span class="n">coll</span><span class="p">)</span><span class="w">
+                 </span><span class="p">(</span><span class="nf">.reduce</span><span class="w"> </span><span class="o">^</span><span class="n">clojure.lang.IReduceInit</span><span class="w"> </span><span class="n">coll</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">init</span><span class="p">)</span><span class="w">
+                 </span><span class="p">(</span><span class="nf">clojure.core.protocols/coll-reduce</span><span class="w"> </span><span class="n">coll</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">init</span><span class="p">))]</span><span class="w">
+       </span><span class="p">(</span><span class="nf">f</span><span class="w"> </span><span class="n">ret</span><span class="p">))))</span><span class="w">
+</span></code></pre></div></div>
+
+<p>这里是不是好像 lodash 里面的 compose 函数啊？</p>
+
+<p>本质上就是的。</p>
+
+<h2 id="23-rx-observable">2.3 Rx Observable</h2>
+
+<h3 id="什么是-rxjs">什么是 rxjs</h3>
+
+<p>Rx 是 ReactiveX 的缩写。</p>
+<blockquote>
+  <p>ReactiveX is a library for composing asynchronous and event-based programs by using observable sequences.</p>
+</blockquote>
+
+<blockquote>
+  <p>It extends the observer pattern to support sequences of data and/or events and adds operators that allow you to compose sequences together declaratively while abstracting away concerns about things like low-level threading, synchronization, thread-safety, concurrent data structures, and non-blocking I/O.</p>
+</blockquote>
+
+<blockquote>
+  <p>It is sometimes called “functional reactive programming” but this is a misnomer. ReactiveX may be functional, and it may be reactive, but “functional reactive programming” is a different animal. One main point of difference is that functional reactive programming operates on values that change continuously over time, while ReactiveX operates on discrete values that are emitted over time. (See Conal Elliott’s work for more-precise information on functional reactive programming.)</p>
+</blockquote>
+
+<h3 id="rxjs-的相关概念">rxjs 的相关概念</h3>
+
+<p>Observable &amp; Subject</p>
+
+<h3 id="rxjs-的-lazy">rxjs 的 lazy</h3>
+
+<h3 id="observable-的-hotcold">Observable 的 hot/cold</h3>
+
+<h2 id="相关文章">相关文章</h2>
+
+<p>Rx 和 Angular2 方面的文章: <a href="https://segmentfault.com/blog/caolixiang33">https://segmentfault.com/blog/caolixiang33</a></p>
+
+<p>Understanding Transducers in JavaScript: <a href="https://medium.com/@roman01la/understanding-transducers-in-javascript-3500d3bd9624">https://medium.com/@roman01la/understanding-transducers-in-javascript-3500d3bd9624</a></p>
+
+<p>Deep dive into a clojure transducer: <a href="https://medium.com/@chpill_/deep-dive-into-a-clojure-transducer-3d4117784fa6">https://medium.com/@chpill_/deep-dive-into-a-clojure-transducer-3d4117784fa6</a></p>
+
+<p>Performance Optimization in Clojure Using Reducers and Transducers — A FORMCEPT Exclusive: <a href="https://medium.com/formcept/performance-optimization-in-clojure-using-reducers-and-transducers-a-formcept-exclusive-375955673547">https://medium.com/formcept/performance-optimization-in-clojure-using-reducers-and-transducers-a-formcept-exclusive-375955673547</a></p>
+
+<p>Rxjs 和 React 相关的文章: <a href="https://medium.com/@fahad19">https://medium.com/@fahad19</a></p>
+
+  </div>
+</div>
+
+<!-- <div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2018/07/01/promise-is-a-monad/">
+            promise is a monad?
+            <small>01 Jul 2018</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2018/06/17/webpack-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">
+            webpack 源码分析
+            <small>17 Jun 2018</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2017/01/14/2016-Mac-%E5%B9%B3%E5%8F%B0%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7-%E8%BD%AF%E4%BB%B6/">
+            Mac 平台常用的一些工具、软件
+            <small>14 Jan 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div> -->
+
+
+<div class="sub_pagination">
+
+  
+    <a class="sub_pagination-item" id="lastest">已经是最新一篇&nbsp<i class="fa fa-unlink"></i></a>
+  
+  
+    <a class="sub_pagination-item newer" href="/%E6%8A%80%E6%9C%AF%E5%8D%9A%E6%96%87/2018/07/01/promise-is-a-monad/">promise is a monad?&nbsp<i class="fa fa-share"></i></a>
+  
+</div>
+
+
+<!-- <div class="comments"> -->
+<h2>Comments</h2>
+
+
+
+<!-- Comment BEGIN -->
+<div id="gitmentContainer"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+  var gitment = new Gitment({
+    owner: 'xiaoDC',
+    id: '2018-07-22 00:00:00 +0800',
+    repo: 'xiaoDC.github.io',
+    oauth: {
+      client_id: '180d6605718d1095fd97',
+      client_secret: '160e63d30cac752d518dc4eefd5f21c0443230b5',
+    },
+  });
+  gitment.render('gitmentContainer');
+</script>
+
+<!-- Comment END -->
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+    <div class="footer">
+  <ul>
+    <span>友情链接 ⟹&nbsp;&nbsp;</span>
+    <li><a href="http://sound2gd.wang">sound2gd</a></li>
+    <li><a href="https://wangqiao.me">夜色残阳の杂货铺子</a></li>
+  </ul>
+  </p></p>
+  <p>  Copyright © 2018 - <a href="/">fri3nds</a> - Powered by
+    <a href="http://jekyllrb.com/">Jekyll</a>.
+    <a href="http://github.com/">Github</a>
+  </p>
+  <ul>
+    <!-- <li><a href="/"><i class="fa fa-twitter fa-2x"></i></a></li> -->
+    <li><a href="https://github.com/xiaoDC"><i class="fa fa-github fa-2x"></i></a></li>
+    <!-- <li><a href="https://www.linkedin.com/nhome/?trk="><i class="fa fa-linkedin fa-2x"></i></a></li> -->
+  </ul>
+</div>
+
+
+    <!-- "The ending isn’t any more important than the moments leading to it." -Dr. Eva Rosalene, To The Moon -->
+  </body>
+</html>
+
